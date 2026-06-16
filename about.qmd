@@ -15,27 +15,27 @@ about:
 
 ## About This Blog
 
-This blog explores how data science is changing the way we understand football. It presents the work from our UBC Master of Data Science capstone project with the Trilemma Foundation — turning millions of on-pitch events into tactical insights that scouts, analysts, and fans can actually use.
+This blog covers our UBC Master of Data Science capstone project with the Trilemma Foundation. We built tools to turn StatsBomb event data into tactical insights that scouts, analysts, and fans can use without writing SQL.
 
 ## Who This Blog Is For
 
-This blog is written for football fans and sports enthusiasts who:
+We wrote this for people who:
 
-- Are curious about how analytics work in modern football
-- Have heard terms like clustering or machine learning but want plain-language explanations
-- Want to understand player roles and consistency without writing SQL
-- Are interested in how clubs and national teams use data to make better decisions
+- Want to know how analytics work in modern football
+- Have heard terms like clustering or machine learning but want a plain explanation
+- Care about player roles and club vs national consistency
+- Follow how clubs and national teams use data
 
-No data science degree required — just curiosity and a love for the game.
+You do not need a data science background to read it.
 
 ## About the Project
 
-This work was completed as part of the DSCI 591 Capstone at UBC, in partnership with the Trilemma Foundation. Our team — Ngoc Minh Quan Hoang, Teem Kwong, Rabindranath Duran Pons, and Li Pu — built a fully automated analytics platform on top of StatsBomb open data, covering 16 competitions and over 12 million on-ball events.
+This was our DSCI 591 Capstone at UBC, in partnership with the Trilemma Foundation. Our team (Ngoc Minh Quan Hoang, Teem Kwong, Rabindranath Duran Pons, and Li Pu) built an automated analytics platform on StatsBomb open data across 16 competitions and over 12 million on-ball events.
 
-The platform delivers player archetype labels, club-vs-national consistency scores, an interactive Looker Studio dashboard, and a plain-English chatbot — all reproducible from a single `docker compose up`.
+The platform includes player archetype labels, club-vs-national consistency scores, a Looker Studio dashboard, and a plain-English chatbot. Everything runs from a single `docker compose up`.
 
 ## About Me
 
-I'm a Master of Data Science student who loves sports. This blog is where I share how analytics and data science are changing the game we love, explained in a way that doesn't require a math degree.
+I'm a Master of Data Science student who likes sports. This blog is a shorter, more readable version of our capstone work.
 
-Thanks for stopping by — let's talk football!
+Thanks for reading.
