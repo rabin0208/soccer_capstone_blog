@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.33">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Ngoc Minh Quan Hoang">
+<meta name="author" content="Teem Kwong">
+<meta name="author" content="Rabindranath Duran Pons">
+<meta name="author" content="Li Pu">
+<meta name="dcterms.date" content="2026-06-15">
+
+<title>Delivering Elite European Football Analytics – Elite European Football Analytics</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ea385d0e468b0dd5ea5bf0780b1290d9.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-c1fac2584b48ed01fb6e278e36375074.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Elite European Football Analytics</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/TrilemmaFoundation/UBC-MDS-Soccer-Capstone-2026"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/rabindranath-duran-pons-1682591ab/"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Delivering Elite European Football Analytics</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">football</div>
+                <div class="quarto-category">sports analytics</div>
+                <div class="quarto-category">machine learning</div>
+                <div class="quarto-category">capstone</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Authors</div>
+      <div class="quarto-title-meta-contents">
+               <p>Ngoc Minh Quan Hoang </p>
+               <p>Teem Kwong </p>
+               <p>Rabindranath Duran Pons </p>
+               <p>Li Pu </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">June 15, 2026</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>Picture this: a national team coach is picking a squad for the next international window. A player has been excellent for their club all season — but do they actually play the same way when they pull on their country’s jersey? And if a scout wants to find “pressing forwards” in La Liga without writing a single line of SQL, can they?</p>
+<p>These are exactly the kinds of questions football analysts ask every day. Our UBC Master of Data Science capstone project with the <strong>Trilemma Foundation</strong> set out to answer them — by building a fully automated analytics platform on top of StatsBomb open data.</p>
+<p>Every match in modern football generates thousands of tracked events: passes, carries, pressures, shots, and more. The hard part isn’t having data — it’s turning 12 million raw events into insights that scouts, coaches, and analysts can actually use. That’s where our project comes in.</p>
+<p>In this post, I’ll walk you through what we built, how the analytics work, and what we learned about player roles and consistency across club and country. No SQL or machine learning background needed.</p>
+<p>By the end, you’ll understand how we classify player archetypes, why Lionel Messi shows up as different types in different competitions, and how a chatbot lets non-technical analysts query the full dataset in plain English.</p>
+</section>
+<section id="the-problem" class="level2">
+<h2 class="anchored" data-anchor-id="the-problem">The Problem</h2>
+<p>StatsBomb open data is one of the richest publicly available football datasets out there <span class="citation" data-cites="statsbomb2024">(<a href="#ref-statsbomb2024" role="doc-biblioref">StatsBomb 2024</a>)</span>. It tracks every on-ball action at sub-second granularity — shots, passes, carries, pressures, dribbles, and more — across 16 competitions spanning Europe, South America, North America, and international tournaments.</p>
+<p>But here’s the catch: the data is deeply nested, spread across thousands of JSON files, and nearly impossible to query without writing complex SQL. Analysts who couldn’t code were effectively locked out.</p>
+<p>Trilemma Foundation needed a product that could answer tactical questions — <em>which players fit a pressing role? Who performs differently for club vs country?</em> — without custom queries for every request. We refined that into three research questions:</p>
+<ol type="1">
+<li><strong>RQ1 (Player archetypes):</strong> What tactical roles exist across European football, and how do they differ by position and competition?</li>
+<li><strong>RQ2 (Cross-context consistency):</strong> Do players maintain similar profiles for club and country, and who specializes in one setting?</li>
+<li><strong>RQ3 (Natural language access):</strong> Can a non-technical analyst query the dataset in plain English and get accurate answers in seconds?</li>
+</ol>
+</section>
+<section id="the-data" class="level2">
+<h2 class="anchored" data-anchor-id="the-data">The Data</h2>
+<p>All data comes from the StatsBomb open dataset via the <code>statsbombpy</code> Python library. Three core tables power everything:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Table</th>
+<th>What it contains</th>
+<th>Scale</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Matches</td>
+<td>One row per match</td>
+<td>3,464 matches</td>
+</tr>
+<tr class="even">
+<td>Events</td>
+<td>One row per on-ball action</td>
+<td>~12.2 million rows</td>
+</tr>
+<tr class="odd">
+<td>Lineups</td>
+<td>One row per player appearance</td>
+<td>165,820 rows</td>
+</tr>
+</tbody>
+</table>
+<p>The events table is the analytical backbone. Passes dominate (~3.4M), followed by ball receipts (~3.2M), carries (~2.6M), and pressures (~1.1M). There are 88,023 shots with expected goals (xG) values, covering 10,808 distinct players across 308 teams.</p>
+<p>A few practical constraints shaped our design:</p>
+<ul>
+<li><strong>270-minute minimum.</strong> We only score players with at least 270 minutes in a season (roughly three full matches). Below that threshold, a single great game can distort per-90 stats.</li>
+<li><strong>Men’s senior competitions only.</strong> The open tier doesn’t cover everything, and competition coverage is uneven — La Liga has complete seasonal data, while some Champions League history is scattered.</li>
+<li><strong>Quality handling.</strong> Missing substitution times and positions required careful preprocessing before any modelling could begin.</li>
+</ul>
+</section>
+<section id="how-the-analytics-work" class="level2">
+<h2 class="anchored" data-anchor-id="how-the-analytics-work">How the Analytics Work</h2>
+<p>Our analytical work addresses <em>how</em> players play, not just how many goals they score. Two models sit on the same 13 per-90 StatsBomb features — covering attack, ball progression, defending, and efficiency:</p>
+<ol type="1">
+<li><strong>PCA + K-Means clustering</strong> for tactical archetypes</li>
+<li><strong>Within-context z-score scoring</strong> for club vs national consistency</li>
+</ol>
+<p>Both run on a shared automated pipeline:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="assets/architecture.png" class="img-fluid figure-img"></p>
+<figcaption>Automated ELT pipeline: StatsBomb API through BigQuery and dbt to analytics marts, ML outputs, and end-user interfaces.</figcaption>
+</figure>
+</div>
+<p>StatsBomb data flows through Google Cloud Storage into BigQuery, gets transformed with dbt (staging → intermediate → marts), enriched by Python ML scripts, and is served through a Django app with an embedded Looker Studio dashboard and Groq-powered chatbot. Dagster orchestrates weekly full runs and hourly refreshes.</p>
+<section id="player-archetype-clustering" class="level3">
+<h3 class="anchored" data-anchor-id="player-archetype-clustering">Player Archetype Clustering</h3>
+<p>We cluster player-seasons after applying the 270-minute minimum (<em>n</em> = 5,469 outfield players, 5,759 including goalkeepers). Goalkeepers are excluded from K-Means and assigned a fixed label because their event profiles are structurally different from outfield players.</p>
+<p>Thirteen per-90 metrics span the full pitch:</p>
+<ul>
+<li><strong>Attacking:</strong> xG per 90, shots per 90, xG per shot</li>
+<li><strong>Progression:</strong> passes, progressive passes, pass completion %, carries, dribbles</li>
+<li><strong>Defending:</strong> pressures, interceptions, blocks, clearances, duels</li>
+</ul>
+<p>After median-imputing missing values, clipping outliers at the 99th percentile, and standardizing features, PCA retains components explaining 80% of variance. K-Means with <strong>k = 5</strong> is applied to the reduced space, producing five interpretable outfield archetypes:</p>
+<div id="tbl-cluster-dist" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-cluster-dist-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1: Player archetype distribution across all player-seasons.
+</figcaption>
+<div aria-describedby="tbl-cluster-dist-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Archetype</th>
+<th>Player-seasons</th>
+<th>Tactical profile</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Low Activity</td>
+<td>1,963</td>
+<td>Low volume across all metrics. Squad players and limited roles</td>
+</tr>
+<tr class="even">
+<td>Defensive Anchor</td>
+<td>1,470</td>
+<td>High clearances, interceptions, duels. Low attacking output</td>
+</tr>
+<tr class="odd">
+<td>Creative Playmaker</td>
+<td>807</td>
+<td>High pass completion, progressive passes, carries. Attacking midfielders</td>
+</tr>
+<tr class="even">
+<td>Pressing Forward</td>
+<td>766</td>
+<td>High pressures, shots, and xG. High-energy forwards and pressing wingers</td>
+</tr>
+<tr class="odd">
+<td>Creative Winger</td>
+<td>463</td>
+<td>High dribbles, carries, shots. Direct wide attackers</td>
+</tr>
+<tr class="even">
+<td>Goalkeeper</td>
+<td>290</td>
+<td>Assigned by position. Excluded from K-Means</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>Archetypes describe <em>how a player is used in a given season</em>, not a fixed career identity. Lionel Messi is mostly classified as <strong>Creative Winger</strong> but appears as <strong>Pressing Forward</strong> during Copa América 2024 — consistent with Argentina’s more compact national-team system in that tournament.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="assets/looker-cluster-page2.png" class="img-fluid figure-img"></p>
+<figcaption>Looker cluster explorer filtered to Lionel Messi. Most seasons are Creative Winger, with Pressing Forward appearing in Copa América 2024.</figcaption>
+</figure>
+</div>
+</section>
+<section id="club-vs-national-consistency-scoring" class="level3">
+<h3 class="anchored" data-anchor-id="club-vs-national-consistency-scoring">Club vs National Consistency Scoring</h3>
+<p>For <strong>489 dual-context players</strong> with at least 270 minutes in both club and national football, we standardize each of the 13 features <strong>within context</strong>. Club z-scores compare a player only to other club players; national z-scores compare only to other national-team players.</p>
+<p>From there we compute:</p>
+<ul>
+<li><strong>Performance scores</strong> — how strong a player is vs peers in each setting</li>
+<li><strong>Consistency score</strong> — how similar a player’s profile is across contexts (1 minus the mean absolute z-gap)</li>
+<li><strong>Four performance quadrants</strong> — by median splits on club and national performance</li>
+</ul>
+<div id="tbl-quadrants" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-quadrants-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2: Quadrant assignment logic.
+</figcaption>
+<div aria-describedby="tbl-quadrants-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Club vs median</th>
+<th>National vs median</th>
+<th>Quadrant</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>≥ median</td>
+<td>≥ median</td>
+<td>Elite</td>
+</tr>
+<tr class="even">
+<td>≥ median</td>
+<td>&lt; median</td>
+<td>Club Specialist</td>
+</tr>
+<tr class="odd">
+<td>&lt; median</td>
+<td>≥ median</td>
+<td>International Specialist</td>
+</tr>
+<tr class="even">
+<td>&lt; median</td>
+<td>&lt; median</td>
+<td>Underperformer</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>Progressive passing into the attacking third best separates club-focused from national-focused specialists. An “Elite” player outperforms cohort medians in both settings — but a stable profile isn’t the same as a strong one. Many players look similar across contexts while ranking below average in both.</p>
+</section>
+</section>
+<section id="what-we-found" class="level2">
+<h2 class="anchored" data-anchor-id="what-we-found">What We Found</h2>
+<section id="rq1-position-drives-role-more-than-league" class="level3">
+<h3 class="anchored" data-anchor-id="rq1-position-drives-role-more-than-league">RQ1: Position Drives Role More Than League</h3>
+<p>Chi-square tests show that <strong>position drives archetype assignment</strong> more strongly than competition. In plain terms:</p>
+<ul>
+<li><strong>Center backs</strong> concentrate in Defensive Anchor and Low Activity. Attacking clusters are rare.</li>
+<li><strong>Forwards and attacking mids</strong> skew toward Pressing Forward and Creative Winger.</li>
+<li><strong>Central mids</strong> spread across Creative Playmaker, Pressing Forward, and Low Activity — reflecting overlapping box-to-box roles.</li>
+<li><strong>Full backs</strong> often land in Creative Winger or Creative Playmaker when their profiles emphasize carries and progressive passing.</li>
+</ul>
+<p>League effects are secondary but visible. Serie A has the largest Low Activity share among the top five leagues. Bundesliga and La Liga show relatively more Pressing Forwards. The same position can shift 5–15 percentage points in archetype share between leagues — so filter by position before comparing competitions.</p>
+<div id="tbl-rq1-competition" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-rq1-competition-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;3: Outfield cluster counts by competition. Goalkeepers excluded.
+</figcaption>
+<div aria-describedby="tbl-rq1-competition-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 29%">
+<col style="width: 24%">
+<col style="width: 26%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Competition</th>
+<th>Largest archetype</th>
+<th>Second largest</th>
+<th>Notable pattern</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>La Liga</td>
+<td>Defensive Anchor (304)</td>
+<td>Low Activity (167)</td>
+<td>Highest volume. Anchors lead</td>
+</tr>
+<tr class="even">
+<td>Serie A</td>
+<td>Low Activity (240)</td>
+<td>Defensive Anchor (138)</td>
+<td>Most Low Activity share among top five</td>
+</tr>
+<tr class="odd">
+<td>Ligue 1</td>
+<td>Defensive Anchor (175)</td>
+<td>Low Activity (148)</td>
+<td>Similar anchor vs low-activity mix</td>
+</tr>
+<tr class="even">
+<td>Premier League</td>
+<td>Defensive Anchor (169)</td>
+<td>Low Activity (163)</td>
+<td>Near-even top two clusters</td>
+</tr>
+<tr class="odd">
+<td>Bundesliga</td>
+<td>Defensive Anchor (145)</td>
+<td>Low Activity (121)</td>
+<td>Smallest top-five sample. More Pressing Forward (83)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</section>
+<section id="rq2-a-third-of-players-specialize-in-one-context" class="level3">
+<h3 class="anchored" data-anchor-id="rq2-a-third-of-players-specialize-in-one-context">RQ2: A Third of Players Specialize in One Context</h3>
+<p>Of 489 dual-context players:</p>
+<div id="tbl-quadrant-dist" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-quadrant-dist-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;4: Observed quadrant counts for dual-context players.
+</figcaption>
+<div aria-describedby="tbl-quadrant-dist-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Quadrant</th>
+<th>Players</th>
+<th>Share</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Elite</td>
+<td>157</td>
+<td>32.1%</td>
+</tr>
+<tr class="even">
+<td>Underperformer</td>
+<td>156</td>
+<td>31.9%</td>
+</tr>
+<tr class="odd">
+<td>Club Specialist</td>
+<td>88</td>
+<td>18.0%</td>
+</tr>
+<tr class="even">
+<td>International Specialist</td>
+<td>88</td>
+<td>18.0%</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>About two thirds of the cohort rank above or below peer median in <strong>both</strong> settings rather than in only one. Comparing Club Specialist vs International Specialist players, the largest gaps are in <strong>passes into the attacking third per 90</strong>, <strong>interceptions per 90</strong>, and <strong>carries into the final third per 90</strong> — system and role differences, not raw goal output, drive the split.</p>
+<p>Defenders show slightly higher mean consistency than forwards, suggesting attacking roles shift more between club tactics and national setups.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="assets/looker-quadrant-scatter.png" class="img-fluid figure-img"></p>
+<figcaption>Looker Consistency Explorer with Germany selected. Serge Gnabry appears as an International Specialist — stronger vs national-team peers than club peers.</figcaption>
+</figure>
+</div>
+</section>
+<section id="rq3-ask-questions-in-plain-english" class="level3">
+<h3 class="anchored" data-anchor-id="rq3-ask-questions-in-plain-english">RQ3: Ask Questions in Plain English</h3>
+<p>The Groq-powered Django chatbot returns BigQuery-backed answers to plain-English questions in under ten seconds. It was tested on representative analyst questions — player rankings by archetype, cross-context comparisons, competition filters — and consistently applied the same eligibility rules as the dashboard, including the 270-minute threshold.</p>
+<p>Advanced Mode exposes the generated SQL for audit, and a read-only SQL guard blocks destructive queries.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="assets/chatbot_screenshot.png" class="img-fluid figure-img"></p>
+<figcaption>Django chatbot with Advanced Mode enabled, showing a natural language query, generated BigQuery SQL, and formatted results.</figcaption>
+</figure>
+</div>
+</section>
+</section>
+<section id="the-product" class="level2">
+<h2 class="anchored" data-anchor-id="the-product">The Product</h2>
+<p>We delivered a unified Django web application combining two interfaces:</p>
+<ul>
+<li><strong>Looker Studio dashboard</strong> — visual access to pre-computed results (archetype distributions, consistency quadrants, player rankings) filterable by position, competition, and archetype. Great for regular reporting and communicating findings to non-technical stakeholders.</li>
+<li><strong>Plain-English chatbot</strong> — covers ad-hoc questions outside fixed dashboard charts, returning mart-backed answers with SQL audit trails.</li>
+</ul>
+<p>Why both? Trilemma’s analysts operate at two levels of inquiry that no single tool handles alone: broad visual exploration and specific ad-hoc questions. A notebooks-only approach was inaccessible to non-technical staff; a dashboard alone couldn’t replace flexible querying without Looker edit access.</p>
+<p><strong>Strengths:</strong> the Dagster-automated pipeline refreshes all data weekly with zero manual intervention. The product is fully reproducible from a single <code>docker compose up</code> and documented for independent use.</p>
+<p><strong>Limitations:</strong> the chatbot handles single-step queries only — multi-step reasoning (e.g., tracking a player’s archetype across seasons before comparing against national peers) isn’t yet supported. Both interfaces are scoped to men’s competitions, and pre-defined dashboard charts can’t be customized without Looker Studio access.</p>
+</section>
+<section id="why-this-matters" class="level2">
+<h2 class="anchored" data-anchor-id="why-this-matters">Why This Matters</h2>
+<p>You might wonder: “If archetypes describe playing style, not transfer value, what’s the point?” Great question.</p>
+<section id="for-scouts-and-analysts" class="level3">
+<h3 class="anchored" data-anchor-id="for-scouts-and-analysts">For Scouts and Analysts</h3>
+<ul>
+<li><strong>Archetype labels</strong> help profile scouting targets and assess squad balance before a transfer window — replacing ad-hoc SQL with a filterable dashboard.</li>
+<li><strong>Consistency scores</strong> provide a data-grounded tool for national team selection — showing who thrives in both contexts vs who specializes.</li>
+<li><strong>The chatbot</strong> removes the SQL barrier entirely for day-to-day analytical work.</li>
+</ul>
+</section>
+<section id="for-fans" class="level3">
+<h3 class="anchored" data-anchor-id="for-fans">For Fans</h3>
+<p>Understanding these analytics makes watching football more interesting:</p>
+<ul>
+<li>See why a player might excel for their club but struggle internationally (or vice versa)</li>
+<li>Appreciate how tactical systems shape player profiles — Messi as Pressing Forward at Copa América 2024 tells a story about Argentina’s system</li>
+<li>Follow the conversation when pundits discuss “pressing forwards” or “progressive passers” with actual data behind the labels</li>
+</ul>
+</section>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>The original problem was simple: Trilemma Foundation analysts had no scalable way to extract tactical insights from StatsBomb event data without writing complex SQL. We addressed that with three research products on a single automated pipeline.</p>
+<p><strong>RQ1</strong> established that five tactical archetypes emerge from 5,759 player-seasons across 16 competitions, with position as the dominant driver. <strong>RQ2</strong> found that 36% of dual-context players specialize in one setting while 32% perform above peer median in both. <strong>RQ3</strong> demonstrated that a Groq LLM reliably translates plain English into accurate BigQuery SQL.</p>
+<p>A key lesson: product form matters as much as model quality. Combining a visual dashboard with a conversational interface gives analysts coverage that neither tool provides independently.</p>
+<section id="key-takeaways" class="level3">
+<h3 class="anchored" data-anchor-id="key-takeaways">Key Takeaways</h3>
+<ul>
+<li>Five outfield archetypes (plus goalkeepers) emerge from 13 per-90 StatsBomb features using PCA + K-Means</li>
+<li>Position drives role assignment more strongly than league or competition</li>
+<li>36% of dual-context players specialize in club or national football; system differences — not goal output — drive the split</li>
+<li>A plain-English chatbot lets non-technical analysts query 12+ million events without writing SQL</li>
+<li>The full platform refreshes weekly and deploys with a single Docker command</li>
+</ul>
+</section>
+</section>
+<section id="quick-reference-key-terms" class="level2">
+<h2 class="anchored" data-anchor-id="quick-reference-key-terms">Quick Reference: Key Terms</h2>
+<p><strong>Archetype:</strong> A tactical role label (e.g., Pressing Forward, Creative Playmaker) assigned based on a player’s per-90 event profile in a given season.</p>
+<p><strong>Per-90 metrics:</strong> Statistics normalized to a full 90-minute game, so players with different minutes played can be compared fairly.</p>
+<p><strong>Consistency score:</strong> A measure of how similar a player’s tactical profile is when playing for club vs country (1 = identical profile, 0 = completely different).</p>
+<p><strong>xG (Expected Goals):</strong> A metric estimating the quality of a shooting opportunity based on factors like distance, angle, and defensive pressure.</p>
+<p><strong>Quadrant:</strong> One of four categories (Elite, Club Specialist, International Specialist, Underperformer) based on a player’s performance vs peers in each context.</p>
+</section>
+<section id="want-to-learn-more" class="level2">
+<h2 class="anchored" data-anchor-id="want-to-learn-more">Want to Learn More?</h2>
+<p>Explore the full project repository and documentation:</p>
+<ul>
+<li><strong>Project repository:</strong> <a href="https://github.com/TrilemmaFoundation/UBC-MDS-Soccer-Capstone-2026">UBC-MDS-Soccer-Capstone-2026</a></li>
+<li><strong>Consistency methodology:</strong> <a href="https://github.com/TrilemmaFoundation/UBC-MDS-Soccer-Capstone-2026/blob/main/docs/appendix/consistency-explorer.md">Consistency Explorer appendix</a></li>
+<li><strong>Pipeline architecture:</strong> <a href="https://github.com/TrilemmaFoundation/UBC-MDS-Soccer-Capstone-2026/blob/main/HANDOVER.md">Partner handover guide</a></li>
+<li><strong>StatsBomb open data:</strong> <a href="https://github.com/statsbomb/open-data">github.com/statsbomb/open-data</a></li>
+</ul>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-statsbomb2024" class="csl-entry" role="listitem">
+StatsBomb. 2024. <span>“<span>StatsBomb Open Data</span>.”</span> <a href="https://github.com/statsbomb/open-data" class="uri">https://github.com/statsbomb/open-data</a>.
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

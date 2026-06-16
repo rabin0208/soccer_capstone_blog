@@ -1,0 +1,41 @@
+---
+title: "About"
+image: profile.jpg
+about:
+  template: jolla
+  links:
+    - icon: linkedin
+      text: LinkedIn
+      href: https://www.linkedin.com/in/rabindranath-duran-pons-1682591ab/
+    - icon: github
+      text: Github
+      href: https://github.com/rabin0208
+
+---
+
+## About This Blog
+
+This blog explores how data science is changing the way we understand football. It presents the work from our UBC Master of Data Science capstone project with the Trilemma Foundation — turning millions of on-pitch events into tactical insights that scouts, analysts, and fans can actually use.
+
+## Who This Blog Is For
+
+This blog is written for football fans and sports enthusiasts who:
+
+- Are curious about how analytics work in modern football
+- Have heard terms like clustering or machine learning but want plain-language explanations
+- Want to understand player roles and consistency without writing SQL
+- Are interested in how clubs and national teams use data to make better decisions
+
+No data science degree required — just curiosity and a love for the game.
+
+## About the Project
+
+This work was completed as part of the DSCI 591 Capstone at UBC, in partnership with the Trilemma Foundation. Our team — Ngoc Minh Quan Hoang, Teem Kwong, Rabindranath Duran Pons, and Li Pu — built a fully automated analytics platform on top of StatsBomb open data, covering 16 competitions and over 12 million on-ball events.
+
+The platform delivers player archetype labels, club-vs-national consistency scores, an interactive Looker Studio dashboard, and a plain-English chatbot — all reproducible from a single `docker compose up`.
+
+## About Me
+
+I'm a Master of Data Science student who loves sports. This blog is where I share how analytics and data science are changing the game we love, explained in a way that doesn't require a math degree.
+
+Thanks for stopping by — let's talk football!

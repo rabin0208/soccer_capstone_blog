@@ -1,0 +1,19 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "Elite European Football Analytics"
+  navbar:
+    right:
+      - about.qmd
+      - icon: github
+        href: https://github.com/TrilemmaFoundation/UBC-MDS-Soccer-Capstone-2026
+      - icon: linkedin
+        href: https://www.linkedin.com/in/rabindranath-duran-pons-1682591ab/
+format:
+  html:
+    theme:
+      - cosmo
+      - brand
+    css: styles.css
