@@ -530,6 +530,7 @@ Table&nbsp;4: Observed quadrant counts for dual-context players.
 <li><strong>Looker Studio dashboard:</strong> pre-computed results (archetype distributions, consistency quadrants, player rankings) with filters for position, competition, and archetype. Useful for regular reporting and sharing with non-technical staff.</li>
 <li><strong>Plain-English chatbot:</strong> handles ad-hoc questions that fixed dashboard charts do not cover, with SQL shown for audit.</li>
 </ul>
+<p>You can try the live app yourself at <a href="http://34.11.235.252/">http://34.11.235.252/</a>. It includes the dashboard and the chatbot, with suggested questions like “What cluster does Messi belong to?” or “Who are the Elite players in La Liga?” For a walkthrough of how it works, watch our <a href="https://canva.link/l2x76q5tw2rriwz">demo video</a>.</p>
 <p>We built both because analysts need broad visual exploration and specific one-off queries. Notebooks alone were not practical for non-technical users. A dashboard alone could not replace flexible querying without Looker edit access.</p>
 <p><strong>Strengths:</strong> Dagster refreshes all data weekly with no manual steps. The full product runs from a single <code>docker compose up</code> and is documented for handover.</p>
 <p><strong>Limitations:</strong> the chatbot only handles single-step queries. Multi-step questions (like tracking a player’s archetype across seasons before comparing national peers) are not supported yet. Both interfaces cover men’s competitions only. Dashboard charts cannot be changed without Looker Studio access.</p>
@@ -582,6 +583,8 @@ Table&nbsp;4: Observed quadrant counts for dual-context players.
 <section id="further-reading" class="level2">
 <h2 class="anchored" data-anchor-id="further-reading">Further Reading</h2>
 <ul>
+<li><strong>Live app:</strong> <a href="http://34.11.235.252/">Football Analytics Chatbot</a></li>
+<li><strong>Demo video:</strong> <a href="https://canva.link/l2x76q5tw2rriwz">Product walkthrough</a></li>
 <li><strong>Project repository:</strong> <a href="https://github.com/TrilemmaFoundation/UBC-MDS-Soccer-Capstone-2026">UBC-MDS-Soccer-Capstone-2026</a></li>
 <li><strong>Consistency methodology:</strong> <a href="https://github.com/TrilemmaFoundation/UBC-MDS-Soccer-Capstone-2026/blob/main/docs/appendix/consistency-explorer.md">Consistency Explorer appendix</a></li>
 <li><strong>Pipeline architecture:</strong> <a href="https://github.com/TrilemmaFoundation/UBC-MDS-Soccer-Capstone-2026/blob/main/HANDOVER.md">Partner handover guide</a></li>
