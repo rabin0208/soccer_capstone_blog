@@ -82,7 +82,25 @@ The 13 per-90 metrics cover the full pitch:
 - **Progression:** passes, progressive passes, pass completion %, carries, dribbles
 - **Defending:** pressures, interceptions, blocks, clearances, duels
 
-We median-impute missing values, clip outliers at the 99th percentile, and standardize features. PCA keeps components that explain 80% of variance. K-Means with **k = 5** runs on that reduced space and gives five outfield archetypes:
+We median-impute missing values, clip outliers at the 99th percentile, and standardize features. PCA keeps components that explain 80% of variance. K-Means with **k = 5** runs on that reduced space and gives five outfield archetypes.
+
+#### Choosing k and validating clusters
+
+We did not pick **k = 5** by default. The full selection workflow is in [Notebook 05](https://github.com/TrilemmaFoundation/UBC-MDS-Soccer-Capstone-2026/blob/main/notebooks/05_player_clustering.py.ipynb) and the exploratory [player clustering notebook](https://github.com/TrilemmaFoundation/UBC-MDS-Soccer-Capstone-2026/blob/main/notebooks/player_clustering.ipynb); production code lives in [`src/ml/cluster.py`](https://github.com/TrilemmaFoundation/UBC-MDS-Soccer-Capstone-2026/blob/main/src/ml/cluster.py).
+
+**PCA variance threshold.** We retain the smallest number of principal components that explain at least 80% of total variance (typically six with the final 13-feature set). **PC1** loads on overall involvement volume; **PC2** contrasts defensive actions against attacking output. The scree plot below shows where extra components add less marginal information.
+
+![Cumulative explained variance by PCA component. The 80% threshold typically requires six components on the final feature set.](assets/pca-explained-variance.png)
+
+**Elbow method (inertia).** We tested **k = 2–10** on the PCA-reduced space. Inertia (within-cluster sum of squares) drops sharply from k = 2 through k = 4, with diminishing returns after k = 5 — the classic elbow pattern. That suggested five to six tactically distinct groups rather than a coarse high- vs low-activity split.
+
+**Silhouette score.** Silhouette measures how well each player sits in its assigned cluster versus the nearest alternative (higher is better). It peaked at **k = 2** (≈ 0.34), which is common when per-90 profiles form a continuum rather than hard natural boundaries — a two-cluster solution would mostly separate high- vs low-involvement players, not coach-facing roles. Among **k = 3–7**, **k = 5** offered the best trade-off between separation (silhouette ≈ 0.28), interpretable archetype profiles aligned with football analytics practice, and stable cluster sizes. We did not use the Davies–Bouldin index in the final pipeline; inertia, silhouette, and manual profile review drove the choice instead.
+
+![Elbow curve (inertia) and silhouette scores for k = 2–10 on PCA-reduced outfield player-seasons.](assets/elbow-plot.png)
+
+**Reproducibility and operational stability.** Production clustering fixes `random_state = 42` and `n_init = 10` so assignments are deterministic on the same input data. We did not run bootstrap resampling or adjusted Rand indices in the shipped pipeline; when the underlying player pool grows, archetype labels in [`seeds/cluster_labels.csv`](https://github.com/TrilemmaFoundation/UBC-MDS-Soccer-Capstone-2026/blob/main/seeds/cluster_labels.csv) are reviewed manually to stay interpretable. Unit tests in [`tests/test_cluster.py`](https://github.com/TrilemmaFoundation/UBC-MDS-Soccer-Capstone-2026/blob/main/tests/test_cluster.py) guard preprocessing (median imputation, 99th-percentile clipping, standardization) and output shape.
+
+**External validity.** Chi-square tests on position × archetype cross-tabs ([Notebook 07](https://github.com/TrilemmaFoundation/UBC-MDS-Soccer-Capstone-2026/blob/main/notebooks/07_rq1_role_distribution.py.ipynb)) provide a downstream check: center backs concentrate in Defensive Anchor and Low Activity, while forwards skew toward Pressing Forward and Creative Winger. The clusters align with football intuition rather than arbitrary splits.
 
 | Archetype | Player-seasons | Tactical profile |
 |---|---|---|
@@ -119,6 +137,16 @@ From there we compute:
 : Quadrant assignment logic. {#tbl-quadrants}
 
 Progressive passing into the attacking third was the biggest gap between club-focused and national-focused specialists. An Elite player beats cohort medians in both settings. But a stable profile is not the same as a strong one. Many players look similar across contexts and still rank below average in both.
+
+#### Validating consistency scores
+
+The consistency model is simpler than clustering, but we still checked it end to end:
+
+- **Within-context standardization** ensures club z-scores compare only to other club players (and national z-scores to national-team peers), so league or tournament level differences do not dominate the gap metric.
+- **Eligibility filter:** only players with ≥ 270 minutes in *both* contexts enter the cohort (*n* = 489), matching the clustering minimum and stabilizing per-90 rates.
+- **Formula checks:** the weighted performance score and consistency formula (`1 − mean|z_gap|`) are unit-tested in [`tests/test_consistency.py`](https://github.com/TrilemmaFoundation/UBC-MDS-Soccer-Capstone-2026/blob/main/tests/test_consistency.py) and walked through in [Notebook 03](https://github.com/TrilemmaFoundation/UBC-MDS-Soccer-Capstone-2026/blob/main/notebooks/03_consistency_score.ipynb).
+- **Pipeline alignment:** end-to-end validation confirmed matching row counts across dbt marts and ML outputs (5,759 clustered player-seasons; 489 dual-context players scored). See the [consistency methodology appendix](https://github.com/TrilemmaFoundation/UBC-MDS-Soccer-Capstone-2026/blob/main/docs/appendix/consistency-explorer.md) and [`docs/consistency.md`](https://github.com/TrilemmaFoundation/UBC-MDS-Soccer-Capstone-2026/blob/main/docs/consistency.md) for full definitions.
+- **Face validity:** outputs were sanity-checked against known dual-context players (e.g., Serge Gnabry as International Specialist in the dashboard explorer).
 
 ## What We Found
 
@@ -238,7 +266,14 @@ We also learned that the product shape matters as much as the models. A dashboar
 - **Live app:** [Football Analytics Chatbot](http://34.11.235.252/)
 - **Demo video:** [Product walkthrough](https://canva.link/l2x76q5tw2rriwz)
 - **Project repository:** [UBC-MDS-Soccer-Capstone-2026](https://github.com/TrilemmaFoundation/UBC-MDS-Soccer-Capstone-2026)
+- **Clustering design (Notebook 05):** [k selection and archetype notes](https://github.com/TrilemmaFoundation/UBC-MDS-Soccer-Capstone-2026/blob/main/notebooks/05_player_clustering.py.ipynb)
+- **Clustering production script:** [`src/ml/cluster.py`](https://github.com/TrilemmaFoundation/UBC-MDS-Soccer-Capstone-2026/blob/main/src/ml/cluster.py)
+- **Cluster unit tests:** [`tests/test_cluster.py`](https://github.com/TrilemmaFoundation/UBC-MDS-Soccer-Capstone-2026/blob/main/tests/test_cluster.py)
+- **RQ1 validation (position × archetype):** [Notebook 07](https://github.com/TrilemmaFoundation/UBC-MDS-Soccer-Capstone-2026/blob/main/notebooks/07_rq1_role_distribution.py.ipynb)
 - **Consistency methodology:** [Consistency Explorer appendix](https://github.com/TrilemmaFoundation/UBC-MDS-Soccer-Capstone-2026/blob/main/docs/appendix/consistency-explorer.md)
+- **Consistency scoring runbook:** [`docs/consistency.md`](https://github.com/TrilemmaFoundation/UBC-MDS-Soccer-Capstone-2026/blob/main/docs/consistency.md)
+- **Consistency unit tests:** [`tests/test_consistency.py`](https://github.com/TrilemmaFoundation/UBC-MDS-Soccer-Capstone-2026/blob/main/tests/test_consistency.py)
+- **Notebook catalog:** [`docs/notebooks.md`](https://github.com/TrilemmaFoundation/UBC-MDS-Soccer-Capstone-2026/blob/main/docs/notebooks.md)
 - **Pipeline architecture:** [Partner handover guide](https://github.com/TrilemmaFoundation/UBC-MDS-Soccer-Capstone-2026/blob/main/HANDOVER.md)
 - **StatsBomb open data:** [github.com/statsbomb/open-data](https://github.com/statsbomb/open-data)
 
