@@ -16,7 +16,7 @@ Every football fan has felt it. There is a player who looks unstoppable every we
 
 Is it the system? The teammates? Or are some players genuinely built for one context more than the other?
 
-We spent four months trying to answer that question with data. We are four UBC Master of Data Science students who happen to be football fans with strong opinions about pressing systems, squad balance, and why your favourite striker goes quiet at tournaments. For our capstone project with the **Trilemma Foundation**, we turned 12 million raw football events into a platform that can actually measure the club-vs-country gap, player by player, feature by feature.
+We spent two months trying to answer that question with data. We are four UBC Master of Data Science students who happen to be football fans with strong opinions about pressing systems, squad balance, and why your favourite striker goes quiet at tournaments. For our capstone project with the **Trilemma Foundation**, we turned 12 million raw football events into a platform that can actually measure the club-vs-country gap, player by player, feature by feature.
 
 ![Official FIFA World Cup 2026 logo.](assets/world-cup-2026.png)
 
@@ -29,6 +29,10 @@ Every summer transfer window, every World Cup squad announcement, the same argum
 These are not just pub arguments. Scouts ask: *how do I find players who fit a specific tactical role without watching every match in La Liga?* National team coaches ask: *which of my in-form players will actually translate to a tournament system?* Analysts ask: *is this player genuinely consistent across contexts, or are we assuming so because they are a big name?*
 
 The data exists to answer all of these. **StatsBomb open data** [@statsbomb2024] tracks every on-ball action including passes, carries, pressures, shots, and dribbles at sub-second resolution across 16 competitions: the top five European leagues, the FIFA World Cup, UEFA Euro, Copa América, and AFCON. That is 3,464 matches, 12.2 million events, and 10,808 players.
+
+One important detail about scope: our **club-level archetypes are built on the 2015/2016 season**, which is the only season where StatsBomb open data provides complete match coverage across all five top European leagues (La Liga, Premier League, Bundesliga, Serie A, and Ligue 1). La Liga alone accounts for over 800 matches from that season, which is why it dominates the coverage chart below. The club-vs-country consistency analysis draws on a wider window, pairing each player's 2015/2016 club profile against their international appearances across all tournaments in the dataset.
+
+![StatsBomb open data coverage overview: 3,429 matches across 16 competitions from 2003 to 2025. The 2015/2016 La Liga season is by far the largest single-season contribution, which is why it anchors the club archetype analysis.](assets/data-coverage.png)
 
 The problem is that "the data exists" is not the same as "the data is usable." And that gap is exactly where we spent most of our time. But before we get into how we solved it, here is what we actually found.
 
@@ -99,11 +103,11 @@ The biggest difference between Club Specialists and International Specialists wa
 
 ### Gnabry's Hidden International Pedigree
 
-**Serge Gnabry** is the clearest example from our cohort. Looking only at his Bundesliga club-season data, he looks solid but unremarkable relative to peers. Compare his national-team profile to other international-level players and he stands out as a textbook **International Specialist**.
+**Serge Gnabry** is the clearest example from our cohort. When we filter the Consistency Explorer to Germany, his position on the scatter plot tells the story immediately. Looking only at his Bundesliga club-season data, he looks solid but unremarkable relative to peers. Filter to Germany's national-team context and he stands out as a textbook **International Specialist**, elevating well above his national-team cohort.
 
 If you were selecting a Germany squad based purely on club form, you might undervalue him. If you knew he was an International Specialist, that changes the conversation.
 
-![Looker Consistency Explorer with Germany selected. Serge Gnabry appears as an International Specialist, stronger vs national-team peers than club peers.](assets/looker-quadrant-scatter.png)
+![Looker Consistency Explorer filtered to Germany. Serge Gnabry appears as an International Specialist, performing stronger relative to national-team peers than to club peers.](assets/looker-quadrant-scatter.png)
 
 ### Ask It in Plain English
 
@@ -126,6 +130,8 @@ Think of it this way. If every touch of the ball in every match is one row in a 
 We built the full pipeline on Google Cloud. Raw data lands in Google Cloud Storage, moves into **BigQuery** (Google's cloud data warehouse), and gets transformed by **dbt** into clean, analysis-ready tables. Those tables feed two machine learning models, a Looker Studio dashboard, and a plain-English chatbot, all refreshed weekly by **Dagster** with no manual steps.
 
 The warehouse is the invisible foundation. Without it, every question requires a programmer and a few hours. With it, any analyst can ask "who are the elite pressing forwards in Ligue 1?" and get an answer in under ten seconds.
+
+![Automated ELT pipeline: StatsBomb API through BigQuery and dbt to analytics marts, ML outputs, and end-user interfaces.](assets/architecture.png)
 
 ## Why This Matters
 
@@ -160,12 +166,6 @@ The platform refreshes weekly. The full product deploys with a single `docker co
 ## Under the Hood: How the Models Work
 
 *The technical details for the curious. You can skip this section entirely and still get everything from the findings above.*
-
-### The Pipeline Architecture
-
-All of this runs on a fully automated ELT pipeline. StatsBomb data flows from the open data API into Google Cloud Storage, through BigQuery and dbt transformations, and out to the ML models, dashboard, and chatbot. Dagster orchestrates every step on a weekly refresh schedule.
-
-![Automated ELT pipeline: StatsBomb API through BigQuery and dbt to analytics marts, ML outputs, and end-user interfaces.](assets/architecture.png)
 
 ### The 13 Features Behind Every Archetype
 

@@ -216,7 +216,7 @@ window.Quarto = {
 
 <p>Every football fan has felt it. There is a player who looks unstoppable every weekend for their club. Clinical. Dominant. Exactly where they need to be. Then the international break arrives, they pull on the national shirt, and something just feels off. Not injured. Not unlucky. Just different.</p>
 <p>Is it the system? The teammates? Or are some players genuinely built for one context more than the other?</p>
-<p>We spent four months trying to answer that question with data. We are four UBC Master of Data Science students who happen to be football fans with strong opinions about pressing systems, squad balance, and why your favourite striker goes quiet at tournaments. For our capstone project with the <strong>Trilemma Foundation</strong>, we turned 12 million raw football events into a platform that can actually measure the club-vs-country gap, player by player, feature by feature.</p>
+<p>We spent two months trying to answer that question with data. We are four UBC Master of Data Science students who happen to be football fans with strong opinions about pressing systems, squad balance, and why your favourite striker goes quiet at tournaments. For our capstone project with the <strong>Trilemma Foundation</strong>, we turned 12 million raw football events into a platform that can actually measure the club-vs-country gap, player by player, feature by feature.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="assets/world-cup-2026.png" class="img-fluid figure-img"></p>
@@ -229,6 +229,13 @@ window.Quarto = {
 <p>Every summer transfer window, every World Cup squad announcement, the same arguments play out. Is this player good enough for the national team? Why does a striker who scores every weekend go quiet at tournaments? Why does a winger who looks ordinary at club level suddenly become unplayable internationally?</p>
 <p>These are not just pub arguments. Scouts ask: <em>how do I find players who fit a specific tactical role without watching every match in La Liga?</em> National team coaches ask: <em>which of my in-form players will actually translate to a tournament system?</em> Analysts ask: <em>is this player genuinely consistent across contexts, or are we assuming so because they are a big name?</em></p>
 <p>The data exists to answer all of these. <strong>StatsBomb open data</strong> <span class="citation" data-cites="statsbomb2024">(<a href="#ref-statsbomb2024" role="doc-biblioref">StatsBomb 2024</a>)</span> tracks every on-ball action including passes, carries, pressures, shots, and dribbles at sub-second resolution across 16 competitions: the top five European leagues, the FIFA World Cup, UEFA Euro, Copa América, and AFCON. That is 3,464 matches, 12.2 million events, and 10,808 players.</p>
+<p>One important detail about scope: our <strong>club-level archetypes are built on the 2015/2016 season</strong>, which is the only season where StatsBomb open data provides complete match coverage across all five top European leagues (La Liga, Premier League, Bundesliga, Serie A, and Ligue 1). La Liga alone accounts for over 800 matches from that season, which is why it dominates the coverage chart below. The club-vs-country consistency analysis draws on a wider window, pairing each player’s 2015/2016 club profile against their international appearances across all tournaments in the dataset.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="assets/data-coverage.png" class="img-fluid figure-img"></p>
+<figcaption>StatsBomb open data coverage overview: 3,429 matches across 16 competitions from 2003 to 2025. The 2015/2016 La Liga season is by far the largest single-season contribution, which is why it anchors the club archetype analysis.</figcaption>
+</figure>
+</div>
 <p>The problem is that “the data exists” is not the same as “the data is usable.” And that gap is exactly where we spent most of our time. But before we get into how we solved it, here is what we actually found.</p>
 </section>
 <section id="what-we-found" class="level2">
@@ -412,12 +419,12 @@ Table&nbsp;3: Observed quadrant counts for dual-context players.
 </section>
 <section id="gnabrys-hidden-international-pedigree" class="level3">
 <h3 class="anchored" data-anchor-id="gnabrys-hidden-international-pedigree">Gnabry’s Hidden International Pedigree</h3>
-<p><strong>Serge Gnabry</strong> is the clearest example from our cohort. Looking only at his Bundesliga club-season data, he looks solid but unremarkable relative to peers. Compare his national-team profile to other international-level players and he stands out as a textbook <strong>International Specialist</strong>.</p>
+<p><strong>Serge Gnabry</strong> is the clearest example from our cohort. When we filter the Consistency Explorer to Germany, his position on the scatter plot tells the story immediately. Looking only at his Bundesliga club-season data, he looks solid but unremarkable relative to peers. Filter to Germany’s national-team context and he stands out as a textbook <strong>International Specialist</strong>, elevating well above his national-team cohort.</p>
 <p>If you were selecting a Germany squad based purely on club form, you might undervalue him. If you knew he was an International Specialist, that changes the conversation.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="assets/looker-quadrant-scatter.png" class="img-fluid figure-img"></p>
-<figcaption>Looker Consistency Explorer with Germany selected. Serge Gnabry appears as an International Specialist, stronger vs national-team peers than club peers.</figcaption>
+<figcaption>Looker Consistency Explorer filtered to Germany. Serge Gnabry appears as an International Specialist, performing stronger relative to national-team peers than to club peers.</figcaption>
 </figure>
 </div>
 </section>
@@ -441,6 +448,12 @@ Table&nbsp;3: Observed quadrant counts for dual-context players.
 <p>Think of it this way. If every touch of the ball in every match is one row in a spreadsheet, you have 12 million rows. Finding the top pressing forwards across five leagues means scanning all of them, calculating rates per 90 minutes, filtering out players with too few appearances, and ranking by position. In a spreadsheet, that takes hours and breaks. In a warehouse with pre-built summaries, it takes a second.</p>
 <p>We built the full pipeline on Google Cloud. Raw data lands in Google Cloud Storage, moves into <strong>BigQuery</strong> (Google’s cloud data warehouse), and gets transformed by <strong>dbt</strong> into clean, analysis-ready tables. Those tables feed two machine learning models, a Looker Studio dashboard, and a plain-English chatbot, all refreshed weekly by <strong>Dagster</strong> with no manual steps.</p>
 <p>The warehouse is the invisible foundation. Without it, every question requires a programmer and a few hours. With it, any analyst can ask “who are the elite pressing forwards in Ligue 1?” and get an answer in under ten seconds.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="assets/architecture.png" class="img-fluid figure-img"></p>
+<figcaption>Automated ELT pipeline: StatsBomb API through BigQuery and dbt to analytics marts, ML outputs, and end-user interfaces.</figcaption>
+</figure>
+</div>
 </section>
 <section id="why-this-matters" class="level2">
 <h2 class="anchored" data-anchor-id="why-this-matters">Why This Matters</h2>
@@ -470,16 +483,6 @@ Table&nbsp;3: Observed quadrant counts for dual-context players.
 <section id="under-the-hood-how-the-models-work" class="level2">
 <h2 class="anchored" data-anchor-id="under-the-hood-how-the-models-work">Under the Hood: How the Models Work</h2>
 <p><em>The technical details for the curious. You can skip this section entirely and still get everything from the findings above.</em></p>
-<section id="the-pipeline-architecture" class="level3">
-<h3 class="anchored" data-anchor-id="the-pipeline-architecture">The Pipeline Architecture</h3>
-<p>All of this runs on a fully automated ELT pipeline. StatsBomb data flows from the open data API into Google Cloud Storage, through BigQuery and dbt transformations, and out to the ML models, dashboard, and chatbot. Dagster orchestrates every step on a weekly refresh schedule.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="assets/architecture.png" class="img-fluid figure-img"></p>
-<figcaption>Automated ELT pipeline: StatsBomb API through BigQuery and dbt to analytics marts, ML outputs, and end-user interfaces.</figcaption>
-</figure>
-</div>
-</section>
 <section id="the-13-features-behind-every-archetype" class="level3">
 <h3 class="anchored" data-anchor-id="the-13-features-behind-every-archetype">The 13 Features Behind Every Archetype</h3>
 <p>Both models (clustering and consistency scoring) run on the same 13 per-90 StatsBomb metrics, so archetype labels and consistency scores stay aligned across the whole product:</p>
