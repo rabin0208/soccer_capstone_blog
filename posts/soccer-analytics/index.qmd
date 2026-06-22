@@ -1,5 +1,6 @@
 ---
-title: "Delivering Elite European Football Analytics"
+title: "Same Player, Different Game"
+subtitle: "A data-driven look at football's biggest puzzle: why your club's best player can be a completely different beast for their national team"
 author:
   - Ngoc Minh Quan Hoang
   - Teem Kwong
@@ -11,171 +12,77 @@ draft: false
 bibliography: references.bib
 ---
 
-## Introduction
+Every football fan has felt it. There is a player who looks unstoppable every weekend for their club. Clinical. Dominant. Exactly where they need to be. Then the international break arrives, they pull on the national shirt, and something just feels off. Not injured. Not unlucky. Just different.
 
-A national team coach picking a squad for the World Cup faces a common question: does a player who looks great at club level actually play the same way for their country? Scouts face a related one. How do you find pressing forwards in La Liga without writing SQL for every search?
+Is it the system? The teammates? Or are some players genuinely built for one context more than the other?
 
-These are the kinds of questions football analysts work on every day. With the World Cup on the calendar, the club-vs-national gap matters even more. A striker who dominates in the league might not fit how a national team actually sets up in a tournament.
-
-For our UBC Master of Data Science capstone with the **Trilemma Foundation**, we tried to answer these questions by building an automated analytics platform on top of StatsBomb open data.
+We spent four months trying to answer that question with data. We are four UBC Master of Data Science students who happen to be football fans with strong opinions about pressing systems, squad balance, and why your favourite striker goes quiet at tournaments. For our capstone project with the **Trilemma Foundation**, we turned 12 million raw football events into a platform that can actually measure the club-vs-country gap, player by player, feature by feature.
 
 ![Official FIFA World Cup 2026 logo.](assets/world-cup-2026.png)
 
-Each match produces thousands of tracked events like passes, carries, pressures, and shots. The data is there. The harder part is turning roughly 12 million raw events into something scouts, coaches, and analysts can actually use. That was the goal of our project.
+With the World Cup here, the timing felt right to share what we found.
 
-**A note on the data:** our club league analysis focuses on the **2015/2016 season** for the top five European leagues (La Liga, Premier League, Bundesliga, Serie A, and Ligue 1), where StatsBomb open data has full seasonal coverage. The wider dataset also includes international tournaments such as the **FIFA World Cup**, UEFA Euro, Copa América, and AFCON, which we use for the club-vs-national consistency work.
+## The Questions Every Fan and Scout Is Already Asking
 
-In this post we explain what we built, how the models work, and what we found about player roles and consistency across club and country. You do not need a SQL or machine learning background to follow along.
+Every summer transfer window, every World Cup squad announcement, the same arguments play out. Is this player good enough for the national team? Why does a striker who scores every weekend go quiet at tournaments? Why does a winger who looks ordinary at club level suddenly become unplayable internationally?
 
-## The Problem
+These are not just pub arguments. Scouts ask: *how do I find players who fit a specific tactical role without watching every match in La Liga?* National team coaches ask: *which of my in-form players will actually translate to a tournament system?* Analysts ask: *is this player genuinely consistent across contexts, or are we assuming so because they are a big name?*
 
-StatsBomb open data is one of the most detailed public football datasets available [@statsbomb2024]. It tracks on-ball actions at sub-second level across 16 competitions in Europe, South America, North America, and international tournaments. That includes shots, passes, carries, pressures, dribbles, and more.
+The data exists to answer all of these. **StatsBomb open data** [@statsbomb2024] tracks every on-ball action including passes, carries, pressures, shots, and dribbles at sub-second resolution across 16 competitions: the top five European leagues, the FIFA World Cup, UEFA Euro, Copa América, and AFCON. That is 3,464 matches, 12.2 million events, and 10,808 players.
 
-The issue is that the data is hard to work with at scale. Records are nested JSON, competitions are split across many files, and pulling useful player metrics means writing complex SQL. Analysts without coding skills were basically locked out.
+The problem is that "the data exists" is not the same as "the data is usable." And that gap is exactly where we spent most of our time. But before we get into how we solved it, here is what we actually found.
 
-Trilemma needed a product that could answer tactical questions without a custom query every time. Things like which players fit a pressing role, or who plays differently for club vs country. We turned that into three research questions:
+## What We Found
 
-1. **RQ1 (Player archetypes):** What tactical roles exist across European football, and how do they differ by position and competition?
-2. **RQ2 (Cross-context consistency):** Do players keep similar profiles for club and country, and who specializes in one setting?
-3. **RQ3 (Natural language access):** Can a non-technical analyst query the dataset in plain English and get accurate answers quickly?
+### Five Roles That Cover Almost Every Outfield Player
 
-## The Data
+We ran **5,469 outfield player-seasons** through a clustering model built on 13 per-90 metrics covering attack, ball progression, and defending. Five tactical profiles emerge naturally from the data with no hand-labelling and no pre-set categories:
 
-All data comes from the StatsBomb open dataset through the `statsbombpy` Python library. We ingested 16 competitions, including the top five European leagues, the FIFA World Cup, UEFA Euro, Copa América, and AFCON. For club football, the main analysis season is **2015/2016**, when StatsBomb provides complete match coverage across La Liga, the Premier League, Bundesliga, Serie A, and Ligue 1.
-
-Three tables sit at the core:
-
-| Table | What it contains | Scale |
-|-------|-----------------|-------|
-| Matches | One row per match | 3,464 matches |
-| Events | One row per on-ball action | ~12.2 million rows |
-| Lineups | One row per player appearance | 165,820 rows |
-
-The events table drives most of the analysis. Passes are the most common action (~3.4M), followed by ball receipts (~3.2M), carries (~2.6M), and pressures (~1.1M). There are 88,023 shots with expected goals (xG) values, covering 10,808 players across 308 teams.
-
-A few constraints shaped how we built the models:
-
-- **270-minute minimum.** We only score players with at least 270 minutes in a season, about three full matches. Below that, one good game can skew per-90 stats.
-- **Men's senior competitions only.** Open data does not cover everything. La Liga has full seasonal coverage, but some Champions League history is scattered.
-- **Data quality.** Missing substitution times and positions meant we had to clean the data carefully before modelling.
-
-## How the Analytics Work
-
-We focused on *how* players play, not just goals scored. Two models use the same 13 per-90 StatsBomb features for attack, ball progression, defending, and efficiency:
-
-1. **PCA + K-Means clustering** for tactical archetypes
-2. **Within-context z-score scoring** for club vs national consistency
-
-Both run on the same automated pipeline:
-
-![Automated ELT pipeline: StatsBomb API through BigQuery and dbt to analytics marts, ML outputs, and end-user interfaces.](assets/architecture.png)
-
-StatsBomb data goes into Google Cloud Storage, then BigQuery. dbt handles the transforms (staging, intermediate, marts). Python scripts add the ML outputs. A Django app serves a Looker Studio dashboard and a Groq chatbot. Dagster runs weekly full refreshes and hourly updates when new files land.
-
-### Player Archetype Clustering
-
-We cluster player-seasons after applying the 270-minute minimum (*n* = 5,469 outfield players, 5,759 including goalkeepers). Goalkeepers are left out of K-Means and get a fixed label because their event profiles look nothing like outfield players.
-
-The 13 per-90 metrics cover the full pitch:
-
-- **Attacking:** xG per 90, shots per 90, xG per shot
-- **Progression:** passes, progressive passes, pass completion %, carries, dribbles
-- **Defending:** pressures, interceptions, blocks, clearances, duels
-
-We median-impute missing values, clip outliers at the 99th percentile, and standardize features. PCA keeps components that explain 80% of variance. K-Means with **k = 5** runs on that reduced space and gives five outfield archetypes.
-
-#### Choosing k and validating clusters
-
-We did not pick **k = 5** by default. The full selection workflow is in [Notebook 05](https://github.com/TrilemmaFoundation/UBC-MDS-Soccer-Capstone-2026/blob/main/notebooks/05_player_clustering.py.ipynb) and the exploratory [player clustering notebook](https://github.com/TrilemmaFoundation/UBC-MDS-Soccer-Capstone-2026/blob/main/notebooks/player_clustering.ipynb); production code lives in [`src/ml/cluster.py`](https://github.com/TrilemmaFoundation/UBC-MDS-Soccer-Capstone-2026/blob/main/src/ml/cluster.py).
-
-**PCA variance threshold.** We retain the smallest number of principal components that explain at least 80% of total variance (typically six with the final 13-feature set). **PC1** loads on overall involvement volume; **PC2** contrasts defensive actions against attacking output. The scree plot below shows where extra components add less marginal information.
-
-![Cumulative explained variance by PCA component. The 80% threshold typically requires six components on the final feature set.](assets/pca-explained-variance.png)
-
-**Elbow method (inertia).** We tested **k = 2–10** on the PCA-reduced space. Inertia (within-cluster sum of squares) drops sharply from k = 2 through k = 4, with diminishing returns after k = 5 — the classic elbow pattern. That suggested five to six tactically distinct groups rather than a coarse high- vs low-activity split.
-
-**Silhouette score.** Silhouette measures how well each player sits in its assigned cluster versus the nearest alternative (higher is better). It peaked at **k = 2** (≈ 0.34), which is common when per-90 profiles form a continuum rather than hard natural boundaries — a two-cluster solution would mostly separate high- vs low-involvement players, not coach-facing roles. Among **k = 3–7**, **k = 5** offered the best trade-off between separation (silhouette ≈ 0.28), interpretable archetype profiles aligned with football analytics practice, and stable cluster sizes. We did not use the Davies–Bouldin index in the final pipeline; inertia, silhouette, and manual profile review drove the choice instead.
-
-![Elbow curve (inertia) and silhouette scores for k = 2–10 on PCA-reduced outfield player-seasons.](assets/elbow-plot.png)
-
-**Reproducibility and operational stability.** Production clustering fixes `random_state = 42` and `n_init = 10` so assignments are deterministic on the same input data. We did not run bootstrap resampling or adjusted Rand indices in the shipped pipeline; when the underlying player pool grows, archetype labels in [`seeds/cluster_labels.csv`](https://github.com/TrilemmaFoundation/UBC-MDS-Soccer-Capstone-2026/blob/main/seeds/cluster_labels.csv) are reviewed manually to stay interpretable. Unit tests in [`tests/test_cluster.py`](https://github.com/TrilemmaFoundation/UBC-MDS-Soccer-Capstone-2026/blob/main/tests/test_cluster.py) guard preprocessing (median imputation, 99th-percentile clipping, standardization) and output shape.
-
-**External validity.** Chi-square tests on position × archetype cross-tabs ([Notebook 07](https://github.com/TrilemmaFoundation/UBC-MDS-Soccer-Capstone-2026/blob/main/notebooks/07_rq1_role_distribution.py.ipynb)) provide a downstream check: center backs concentrate in Defensive Anchor and Low Activity, while forwards skew toward Pressing Forward and Creative Winger. The clusters align with football intuition rather than arbitrary splits.
-
-| Archetype | Player-seasons | Tactical profile |
+| Archetype | Player-seasons | What the data says |
 |---|---|---|
-| Low Activity | 1,963 | Low volume across all metrics. Squad players and limited roles |
+| Low Activity | 1,963 | Low volume across all metrics. Squad players and rotational roles |
 | Defensive Anchor | 1,470 | High clearances, interceptions, duels. Low attacking output |
 | Creative Playmaker | 807 | High pass completion, progressive passes, carries. Attacking midfielders |
 | Pressing Forward | 766 | High pressures, shots, and xG. High-energy forwards and pressing wingers |
 | Creative Winger | 463 | High dribbles, carries, shots. Direct wide attackers |
-| Goalkeeper | 290 | Assigned by position. Excluded from K-Means |
 
 : Player archetype distribution across all player-seasons. {#tbl-cluster-dist}
 
-Archetypes describe how a player is used in a given season, not a fixed career label. Lionel Messi is mostly **Creative Winger**, but shows up as **Pressing Forward** in Copa América 2024. That fits Argentina's more compact setup in that tournament.
+What is striking is how well these map onto roles any football fan would recognise. And where they surprise you is even more interesting.
+
+### Messi the Pressing Forward (No, Really)
+
+Lionel Messi during the 2015/2016 La Liga season: **Creative Winger**. Dribbling, carrying, cutting inside, operating in the half-spaces. The profile most people associate with him.
+
+Messi at Copa América 2024: **Pressing Forward**.
+
+Argentina's tournament setup asked something completely different from him. He pressed higher, contributed more defensively, and carried less. The event data picks it up automatically. This is not a decline story or an injury story. It is a tactical adaptation story, and it shows up clearly in the numbers:
 
 ![Looker cluster explorer filtered to Lionel Messi. Most seasons are Creative Winger, with Pressing Forward appearing in Copa América 2024.](assets/looker-cluster-page2.png)
 
-### Club vs National Consistency Scoring
+### Position Shapes Your Role More Than League Does
 
-We looked at **489 dual-context players** with at least 270 minutes in both club and national football. Each of the 13 features is standardized within context. Club z-scores compare a player to other club players only. National z-scores compare to other national-team players only.
+The bigger pattern across all 5,469 player-seasons: **where you play on the pitch predicts your archetype more than which league you play in**.
 
-From there we compute:
+Center backs overwhelmingly land in Defensive Anchor or Low Activity. Forwards and attacking midfielders cluster into Pressing Forward and Creative Winger. That much is expected. The more interesting finding is how central midfielders spread across three archetypes: Creative Playmaker, Pressing Forward, and Low Activity. This reflects the genuine tactical range of box-to-box roles. A Bundesliga box-to-box midfielder and a Serie A deep-lying playmaker look completely different in the data, even though both appear as "central midfield" on a lineup sheet.
 
-- **Performance scores:** how strong a player is vs peers in each setting
-- **Consistency score:** how similar a player's profile is across contexts (1 minus the mean absolute z-gap)
-- **Four performance quadrants:** based on median splits on club and national performance
-
-| Club vs median | National vs median | Quadrant |
-|----------------|-------------------|----------|
-| ≥ median | ≥ median | Elite |
-| ≥ median | < median | Club Specialist |
-| < median | ≥ median | International Specialist |
-| < median | < median | Underperformer |
-
-: Quadrant assignment logic. {#tbl-quadrants}
-
-Progressive passing into the attacking third was the biggest gap between club-focused and national-focused specialists. An Elite player beats cohort medians in both settings. But a stable profile is not the same as a strong one. Many players look similar across contexts and still rank below average in both.
-
-#### Validating consistency scores
-
-The consistency model is simpler than clustering, but we still checked it end to end:
-
-- **Within-context standardization** ensures club z-scores compare only to other club players (and national z-scores to national-team peers), so league or tournament level differences do not dominate the gap metric.
-- **Eligibility filter:** only players with ≥ 270 minutes in *both* contexts enter the cohort (*n* = 489), matching the clustering minimum and stabilizing per-90 rates.
-- **Formula checks:** the weighted performance score and consistency formula (`1 − mean|z_gap|`) are unit-tested in [`tests/test_consistency.py`](https://github.com/TrilemmaFoundation/UBC-MDS-Soccer-Capstone-2026/blob/main/tests/test_consistency.py) and walked through in [Notebook 03](https://github.com/TrilemmaFoundation/UBC-MDS-Soccer-Capstone-2026/blob/main/notebooks/03_consistency_score.ipynb).
-- **Pipeline alignment:** end-to-end validation confirmed matching row counts across dbt marts and ML outputs (5,759 clustered player-seasons; 489 dual-context players scored). See the [consistency methodology appendix](https://github.com/TrilemmaFoundation/UBC-MDS-Soccer-Capstone-2026/blob/main/docs/appendix/consistency-explorer.md) and [`docs/consistency.md`](https://github.com/TrilemmaFoundation/UBC-MDS-Soccer-Capstone-2026/blob/main/docs/consistency.md) for full definitions.
-- **Face validity:** outputs were sanity-checked against known dual-context players (e.g., Serge Gnabry as International Specialist in the dashboard explorer).
-
-## What We Found
-
-### RQ1: Position Drives Role More Than League
-
-Chi-square tests showed that **position drives archetype assignment** more than competition. A few patterns stood out:
-
-- **Center backs** mostly land in Defensive Anchor and Low Activity. Attacking clusters are rare.
-- **Forwards and attacking mids** lean toward Pressing Forward and Creative Winger.
-- **Central mids** spread across Creative Playmaker, Pressing Forward, and Low Activity. That reflects overlapping box-to-box roles.
-- **Full backs** often end up as Creative Winger or Creative Playmaker when their profiles lean on carries and progressive passing.
-
-League effects matter too, but less than position. Serie A has the largest Low Activity share among the top five leagues. Bundesliga and La Liga have relatively more Pressing Forwards. The same position can shift 5–15 percentage points in archetype share between leagues, so it helps to filter by position before comparing competitions.
+League effects are real but secondary:
 
 | Competition | Largest archetype | Second largest | Notable pattern |
 |-------------|-------------------|----------------|-----------------|
-| La Liga | Defensive Anchor (304) | Low Activity (167) | Highest volume. Anchors lead |
-| Serie A | Low Activity (240) | Defensive Anchor (138) | Most Low Activity share among top five |
-| Ligue 1 | Defensive Anchor (175) | Low Activity (148) | Similar anchor vs low-activity mix |
-| Premier League | Defensive Anchor (169) | Low Activity (163) | Near-even top two clusters |
-| Bundesliga | Defensive Anchor (145) | Low Activity (121) | Smallest top-five sample. More Pressing Forward (83) |
+| La Liga | Defensive Anchor (304) | Low Activity (167) | Highest volume, anchors dominate |
+| Serie A | Low Activity (240) | Defensive Anchor (138) | Most conservative profile among the top five |
+| Ligue 1 | Defensive Anchor (175) | Low Activity (148) | Similar anchor vs passive mix |
+| Premier League | Defensive Anchor (169) | Low Activity (163) | Near-even top two |
+| Bundesliga | Defensive Anchor (145) | Low Activity (121) | Most Pressing Forwards (83) |
 
 : Outfield cluster counts by competition. Goalkeepers excluded. {#tbl-rq1-competition}
 
-### RQ2: A Third of Players Specialize in One Context
+Bundesliga clubs press harder on average. Serie A squads sit deeper on average. If you are scouting across leagues, an archetype comparison only makes sense once you control for position first.
 
-This question is especially relevant around a World Cup. Coaches often have to pick players who look strong in the league but may not match the national team's system. Our consistency scores are meant to help with exactly that kind of decision.
+### The Club-vs-Country Gap Is Tactical, Not About Quality
 
-Of 489 dual-context players:
+Of **489 players with meaningful minutes in both club and national football**, about one in three showed a genuinely different profile in each context. Here is how the cohort breaks down:
 
 | Quadrant | Players | Share |
 |----------|---------|-------|
@@ -186,84 +93,139 @@ Of 489 dual-context players:
 
 : Observed quadrant counts for dual-context players. {#tbl-quadrant-dist}
 
-About two thirds of the cohort rank above or below the peer median in both settings, not just one. When we compared Club Specialist and International Specialist players, the biggest gaps were in **passes into the attacking third per 90**, **interceptions per 90**, and **carries into the final third per 90**. System and role differences explain the split more than goal output.
+Elite players beat the peer median in both club and national settings. Club Specialists are strong against league peers but dip below their national-team cohort. International Specialists are the reverse: players who elevate at tournament level. Underperformers are below median in both.
 
-Defenders had slightly higher mean consistency than forwards. Attacking roles seem to shift more between club tactics and national setups.
+The biggest difference between Club Specialists and International Specialists was not in goals or xG. It was in **progressive passing into the attacking third** and **carries into the final third per 90**. The club-vs-country gap is mostly a system and role story. Not a talent story.
+
+### Gnabry's Hidden International Pedigree
+
+**Serge Gnabry** is the clearest example from our cohort. Looking only at his Bundesliga club-season data, he looks solid but unremarkable relative to peers. Compare his national-team profile to other international-level players and he stands out as a textbook **International Specialist**.
+
+If you were selecting a Germany squad based purely on club form, you might undervalue him. If you knew he was an International Specialist, that changes the conversation.
 
 ![Looker Consistency Explorer with Germany selected. Serge Gnabry appears as an International Specialist, stronger vs national-team peers than club peers.](assets/looker-quadrant-scatter.png)
 
-### RQ3: Ask Questions in Plain English
+### Ask It in Plain English
 
-The Groq-powered Django chatbot answers plain-English questions from BigQuery in under ten seconds. We tested it on typical analyst questions like player rankings by archetype, cross-context comparisons, and competition filters. It applied the same rules as the dashboard, including the 270-minute threshold.
+The dashboard handles regular reporting and sharing. But scouts and analysts always have one-off questions that fixed charts cannot cover, like "Who are the pressing forwards in Ligue 1 with above-average xG?" or "Which Spanish players are Elite in both contexts?"
 
-Advanced Mode shows the generated SQL. A read-only guard blocks destructive queries.
+For those, we built a plain-English chatbot that queries the warehouse directly. Type your question, get BigQuery SQL generated and executed in the background, and receive a formatted answer in under ten seconds. Advanced Mode shows the SQL for anyone who wants to verify or extend the query. A read-only guard blocks anything destructive.
 
 ![Django chatbot with Advanced Mode enabled, showing a natural language query, generated BigQuery SQL, and formatted results.](assets/chatbot_screenshot.png)
 
-## The Product
+You can try everything yourself at [http://34.11.235.252/](http://34.11.235.252/). The full product walkthrough is in our [demo video](https://canva.link/l2x76q5tw2rriwz).
 
-We shipped a Django web app with two interfaces:
+## Why You Need More Than a Spreadsheet
 
-- **Looker Studio dashboard:** pre-computed results (archetype distributions, consistency quadrants, player rankings) with filters for position, competition, and archetype. Useful for regular reporting and sharing with non-technical staff.
-- **Plain-English chatbot:** handles ad-hoc questions that fixed dashboard charts do not cover, with SQL shown for audit.
+StatsBomb data at this scale arrives as deeply nested JSON files, one per match, spread across hundreds of files and split across competitions and seasons. Just loading one season of passes for La Liga requires parsing thousands of records, restructuring arrays, and joining multiple tables. For a one-off question, that is annoying. For a scout who needs answers every week, it is a blocker.
 
-You can try the live app yourself at [http://34.11.235.252/](http://34.11.235.252/). It includes the dashboard and the chatbot, with suggested questions like "What cluster does Messi belong to?" or "Who are the Elite players in La Liga?" For a walkthrough of how it works, watch our [demo video](https://canva.link/l2x76q5tw2rriwz).
+This is why we built a **data warehouse**. Not because it sounds impressive, but because it is the only practical way to turn 12 million raw events into answers you can get in seconds.
 
-We built both because analysts need broad visual exploration and specific one-off queries. Notebooks alone were not practical for non-technical users. A dashboard alone could not replace flexible querying without Looker edit access.
+Think of it this way. If every touch of the ball in every match is one row in a spreadsheet, you have 12 million rows. Finding the top pressing forwards across five leagues means scanning all of them, calculating rates per 90 minutes, filtering out players with too few appearances, and ranking by position. In a spreadsheet, that takes hours and breaks. In a warehouse with pre-built summaries, it takes a second.
 
-**Strengths:** Dagster refreshes all data weekly with no manual steps. The full product runs from a single `docker compose up` and is documented for handover.
+We built the full pipeline on Google Cloud. Raw data lands in Google Cloud Storage, moves into **BigQuery** (Google's cloud data warehouse), and gets transformed by **dbt** into clean, analysis-ready tables. Those tables feed two machine learning models, a Looker Studio dashboard, and a plain-English chatbot, all refreshed weekly by **Dagster** with no manual steps.
 
-**Limitations:** the chatbot only handles single-step queries. Multi-step questions (like tracking a player's archetype across seasons before comparing national peers) are not supported yet. Both interfaces cover men's competitions only. Dashboard charts cannot be changed without Looker Studio access.
+The warehouse is the invisible foundation. Without it, every question requires a programmer and a few hours. With it, any analyst can ask "who are the elite pressing forwards in Ligue 1?" and get an answer in under ten seconds.
 
 ## Why This Matters
 
-Archetypes describe playing style, not transfer value or injury risk. Consistency scores help with national team context, not squad chemistry. Still, the outputs are useful in practice.
+None of these outputs answer whether a player is worth signing or whether a squad will win a tournament. Archetypes describe *how* a player is deployed, not their value. Consistency scores measure *how similar* a profile is across contexts. A stable Underperformer is still an underperformer.
 
-### For Scouts and Analysts
+But in the right hands, these outputs change the conversation.
 
-- **Archetype labels** help profile scouting targets and check squad balance before a transfer window.
-- **Consistency scores** support national team selection by showing who performs in both contexts and who specializes.
-- **The chatbot** lets analysts query the marts without writing SQL for every question.
+**For national team staff:** consistency scores show which players from your league-season shortlist are likely to translate to a tournament system, and which are club specialists who may struggle with the tactical shift. Gnabry's International Specialist label is a conversation starter, not a verdict. But it is a data-grounded one.
 
-### For Fans
+**For scouts:** archetype filters let you find pressing forwards in Ligue 1 with above-average xG without writing SQL for every search. The chatbot handles the querying. You handle the judgment.
 
-The same ideas show up when you watch games:
-
-- A player can look great at club level and different internationally, or the other way around.
-- Tactical systems shape profiles. Messi as Pressing Forward at Copa América 2024 says something about how Argentina set up in that tournament.
-- Terms like "pressing forward" or "progressive passer" have a concrete meaning behind them in the data.
+**For fans:** the next time a player looks completely different at a World Cup, there is a real chance the data backs you up. Systems shape profiles. Messi pressing hard at Copa América 2024 is not a decline. It is Argentina's tournament setup asking something specific from him, and him delivering it.
 
 ## Conclusion
 
-Trilemma analysts had no scalable way to pull tactical insights from StatsBomb event data without complex SQL. We built three research outputs on one automated pipeline to address that.
+We started with a question any football fan asks: does this player actually play the same way for club and country? Four months later, we have a working platform that can answer it, player by player, feature by feature, without writing SQL.
 
-For player archetypes, we found five tactical roles across 5,759 player-seasons in 16 competitions. Position mattered more than league when assigning those labels. For club vs national consistency, about 36% of dual-context players specialized in one setting, while 32% performed above the peer median in both. For natural language access, a Groq LLM could turn plain English questions into accurate BigQuery SQL.
+Five tactical archetypes emerge naturally from 5,759 player-seasons across 16 competitions. Position predicts archetype more than league does. About one in three dual-context players shows a genuinely different profile between club and national football, and the gap is driven by system and role, not talent. A plain-English chatbot makes all of it queryable without a line of code.
 
-We also learned that the product shape matters as much as the models. A dashboard and a chatbot cover different needs, and neither works as well on its own.
+The platform refreshes weekly. The full product deploys with a single `docker compose up`. And yes, Copa América 2024 Messi is a Pressing Forward. The data confirmed what many of us suspected.
 
 ### Key Takeaways
 
-- Five outfield archetypes (plus goalkeepers) come from 13 per-90 StatsBomb features using PCA + K-Means
-- Position drives role assignment more than league or competition
-- 36% of dual-context players specialize in club or national football. System differences, not goal output, drive most of the split
-- A plain-English chatbot lets non-technical analysts query 12+ million events without SQL
-- The platform refreshes weekly and deploys with one Docker command
+- **One in three dual-context players** specialises in one context. The biggest gaps are in progressive passing and carries, not goals or xG.
+- **Gnabry** is a textbook International Specialist. Undervalued if you only watch his club seasons.
+- **Messi** is classified as Creative Winger for most club seasons but Pressing Forward at Copa América 2024. Argentina's compact system asked something different from him.
+- **Position** drives role assignment more than **league**. Context matters before you compare leagues.
+- A **plain-English chatbot** lets any analyst query 12 million events without SQL.
+
+---
+
+## Under the Hood: How the Models Work
+
+*The technical details for the curious. You can skip this section entirely and still get everything from the findings above.*
+
+### The Pipeline Architecture
+
+All of this runs on a fully automated ELT pipeline. StatsBomb data flows from the open data API into Google Cloud Storage, through BigQuery and dbt transformations, and out to the ML models, dashboard, and chatbot. Dagster orchestrates every step on a weekly refresh schedule.
+
+![Automated ELT pipeline: StatsBomb API through BigQuery and dbt to analytics marts, ML outputs, and end-user interfaces.](assets/architecture.png)
+
+### The 13 Features Behind Every Archetype
+
+Both models (clustering and consistency scoring) run on the same 13 per-90 StatsBomb metrics, so archetype labels and consistency scores stay aligned across the whole product:
+
+- **Attacking:** xG per 90, shots per 90, xG per shot
+- **Progression:** passes, progressive passes, pass completion %, carries, dribbles
+- **Defending:** pressures, interceptions, blocks, clearances, duels
+
+We only score players with at least **270 minutes** in a season (roughly three full matches). Below that, a single exceptional game can dominate per-90 stats and produce misleading profiles.
+
+### Choosing Five Archetypes (Not Two, Not Eight)
+
+We did not pick k = 5 by default. The full selection workflow is in [Notebook 05](https://github.com/TrilemmaFoundation/UBC-MDS-Soccer-Capstone-2026/blob/main/notebooks/05_player_clustering.py.ipynb) and production code lives in [`src/ml/cluster.py`](https://github.com/TrilemmaFoundation/UBC-MDS-Soccer-Capstone-2026/blob/main/src/ml/cluster.py).
+
+**PCA first.** We reduce the 13 features to the smallest set of principal components explaining at least 80% of variance, which is typically six. PC1 captures overall involvement volume. PC2 contrasts defensive vs attacking output.
+
+![Cumulative explained variance by PCA component. The 80% threshold typically requires six components on the final feature set.](assets/pca-explained-variance.png)
+
+**Elbow and silhouette to choose k.** We tested k = 2 through 10. Inertia (within-cluster sum of squares) drops sharply through k = 4, with diminishing returns after k = 5, which is the classic elbow shape. Silhouette score peaked at k = 2 (≈ 0.34), which is typical when per-90 profiles form a continuum rather than hard natural clusters. A k = 2 solution would just separate high- and low-involvement players, which is not useful. Among k = 3 through 7, **k = 5** gave the best balance of cluster separation (silhouette ≈ 0.28) and tactically meaningful archetypes.
+
+![Elbow curve (inertia) and silhouette scores for k = 2–10 on PCA-reduced outfield player-seasons.](assets/elbow-plot.png)
+
+**Reproducibility.** Production runs fix `random_state = 42` and `n_init = 10` so assignments are deterministic. Archetype labels in [`seeds/cluster_labels.csv`](https://github.com/TrilemmaFoundation/UBC-MDS-Soccer-Capstone-2026/blob/main/seeds/cluster_labels.csv) are reviewed manually when the player pool grows. Unit tests in [`tests/test_cluster.py`](https://github.com/TrilemmaFoundation/UBC-MDS-Soccer-Capstone-2026/blob/main/tests/test_cluster.py) cover preprocessing and output shape. Chi-square tests on position × archetype cross-tabs ([Notebook 07](https://github.com/TrilemmaFoundation/UBC-MDS-Soccer-Capstone-2026/blob/main/notebooks/07_rq1_role_distribution.py.ipynb)) confirm the clusters align with football intuition rather than arbitrary splits.
+
+### Measuring Club-vs-Country Consistency
+
+For the 489 dual-context players, each feature is standardised **within context**. Club z-scores compare only to other club players. National z-scores compare only to national-team peers. That way, league-level differences in tempo or style do not inflate the gap.
+
+**Performance score** (club and national axes):
+
+$$\text{performance score} = \sum_{i=1}^{13} (Z_i \times w_i)$$
+
+where $w_i$ are PCA-derived feature weights from the clustering pipeline.
+
+**Consistency score** (profile similarity, not quality level):
+
+$$\text{consistency score} = 1 - \frac{1}{13}\sum_{i=1}^{13} \left|Z_{i,\text{club}} - Z_{i,\text{national}}\right|$$
+
+A score of 1 means identical profiles across contexts. A score of 0 means completely different. Quadrants split the cohort at the median of each performance axis.
+
+The weighted score and consistency formula are unit-tested in [`tests/test_consistency.py`](https://github.com/TrilemmaFoundation/UBC-MDS-Soccer-Capstone-2026/blob/main/tests/test_consistency.py) and documented in [Notebook 03](https://github.com/TrilemmaFoundation/UBC-MDS-Soccer-Capstone-2026/blob/main/notebooks/03_consistency_score.ipynb). End-to-end pipeline checks confirmed matching row counts across dbt marts and ML outputs (5,759 clustered player-seasons and 489 dual-context players scored). Full definitions are in the [consistency methodology appendix](https://github.com/TrilemmaFoundation/UBC-MDS-Soccer-Capstone-2026/blob/main/docs/appendix/consistency-explorer.md) and [`docs/consistency.md`](https://github.com/TrilemmaFoundation/UBC-MDS-Soccer-Capstone-2026/blob/main/docs/consistency.md).
 
 ## Quick Reference: Key Terms
 
 **Archetype:** A tactical role label (e.g., Pressing Forward, Creative Playmaker) based on a player's per-90 event profile in a given season.
 
-**Per-90 metrics:** Stats scaled to a full 90-minute game so players with different minutes can be compared.
+**Per-90 metrics:** Stats scaled to a full 90-minute game so players with different minutes can be compared fairly.
 
-**Consistency score:** How similar a player's tactical profile is for club vs country (1 = identical, 0 = very different).
+**Consistency score:** How similar a player's tactical profile is for club vs country. A score of 1 means identical profiles. A score of 0 means completely different.
 
-**xG (Expected Goals):** An estimate of shot quality based on distance, angle, and defensive pressure.
+**xG (Expected Goals):** A shot quality estimate based on distance, angle, and defensive pressure.
 
-**Quadrant:** One of four groups (Elite, Club Specialist, International Specialist, Underperformer) based on performance vs peers in each context.
+**Quadrant:** One of four groups (Elite, Club Specialist, International Specialist, Underperformer) based on whether a player beats their peer median in each context.
+
+**Data warehouse:** A database optimised for analytical queries. It is what lets you ask "who are the top pressing forwards in La Liga?" and get an answer in a second instead of an hour.
 
 ## Further Reading
 
-- **Live app:** [Football Analytics Chatbot](http://34.11.235.252/)
+- **Live app:** [Football Analytics Platform](http://34.11.235.252/)
 - **Demo video:** [Product walkthrough](https://canva.link/l2x76q5tw2rriwz)
 - **Project repository:** [UBC-MDS-Soccer-Capstone-2026](https://github.com/TrilemmaFoundation/UBC-MDS-Soccer-Capstone-2026)
 - **Clustering design (Notebook 05):** [k selection and archetype notes](https://github.com/TrilemmaFoundation/UBC-MDS-Soccer-Capstone-2026/blob/main/notebooks/05_player_clustering.py.ipynb)
