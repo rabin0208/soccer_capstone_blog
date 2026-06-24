@@ -12,11 +12,9 @@ draft: false
 bibliography: references.bib
 ---
 
-Every football fan has felt it. There is a player who looks unstoppable every weekend for their club. Clinical. Dominant. Exactly where they need to be. Then the international break arrives, they pull on the national shirt, and something just feels off. Not injured. Not unlucky. Just different.
+Every football fan has felt it: a player who looks unstoppable every weekend for their club, clinical and dominant, always exactly where they need to be. Then the international break arrives, they pull on the national shirt, and something just feels off, not because of injury or bad luck, but because they seem like a different player altogether. Is it the system, the teammates, or are some players genuinely built for one context more than the other?
 
-Is it the system? The teammates? Or are some players genuinely built for one context more than the other?
-
-We spent two months trying to answer that question with data. We are four UBC Master of Data Science students who happen to be football fans with strong opinions about pressing systems, squad balance, and why your favourite striker goes quiet at tournaments. For our capstone project with the **Trilemma Foundation**, we turned 12 million raw football events into a platform that can actually measure the club-vs-country gap, player by player, feature by feature.
+We spent 2 months trying to answer that question with data. We are four UBC Master of Data Science students who happen to be football fans with strong opinions about pressing systems, squad balance, and why your favourite striker goes quiet at tournaments. For our capstone project with the **Trilemma Foundation**, we turned 12 million raw football events into a platform that can actually measure the club-vs-country gap, player by player, feature by feature.
 
 ![Official FIFA World Cup 2026 logo.](assets/world-cup-2026.png)
 
@@ -24,17 +22,15 @@ With the World Cup here, the timing felt right to share what we found.
 
 ## The Questions Every Fan and Scout Is Already Asking
 
-Every summer transfer window, every World Cup squad announcement, the same arguments play out. Is this player good enough for the national team? Why does a striker who scores every weekend go quiet at tournaments? Why does a winger who looks ordinary at club level suddenly become unplayable internationally?
+Every summer transfer window and every World Cup squad announcement brings the same arguments: is this player good enough for the national team, why does a striker who scores every weekend go quiet at tournaments, and why does a winger who looks ordinary at club level suddenly become unplayable internationally?
 
-These are not just pub arguments. Scouts ask: *how do I find players who fit a specific tactical role without watching every match in La Liga?* National team coaches ask: *which of my in-form players will actually translate to a tournament system?* Analysts ask: *is this player genuinely consistent across contexts, or are we assuming so because they are a big name?*
-
-The data exists to answer all of these. **StatsBomb open data** [@statsbomb2024] tracks every on-ball action including passes, carries, pressures, shots, and dribbles at sub-second resolution across 16 competitions: the top five European leagues, the FIFA World Cup, UEFA Euro, Copa América, and AFCON. That is 3,464 matches, 12.2 million events, and 10,808 players.
+These are not just pub arguments. Scouts ask how to find players who fit a specific tactical role without watching every match in La Liga, national team coaches ask which of their in-form players will actually translate to a tournament system, and analysts ask whether a player is genuinely consistent across contexts or whether we assume so simply because they are a big name. The data exists to answer all of these. **StatsBomb open data** [@statsbomb2024] tracks every on-ball action including passes, carries, pressures, shots, and dribbles at sub-second resolution across 16 competitions: the top five European leagues, the FIFA World Cup, UEFA Euro, Copa América, and AFCON. That is 3,464 matches, 12.2 million events, and 10,808 players.
 
 One important detail about scope: our **club-level archetypes are built on the 2015/2016 season**, which is the only season where StatsBomb open data provides complete match coverage across all five top European leagues (La Liga, Premier League, Bundesliga, Serie A, and Ligue 1). La Liga alone accounts for over 800 matches from that season, which is why it dominates the coverage chart below. The club-vs-country consistency analysis draws on a wider window, pairing each player's 2015/2016 club profile against their international appearances across all tournaments in the dataset.
 
 ![StatsBomb open data coverage overview: 3,429 matches across 16 competitions from 2003 to 2025. The 2015/2016 La Liga season is by far the largest single-season contribution, which is why it anchors the club archetype analysis.](assets/data-coverage.png)
 
-The problem is that "the data exists" is not the same as "the data is usable." And that gap is exactly where we spent most of our time. We cover the engineering side in our [technical companion post](https://rabin0208.github.io/soccer_capstone_technical_blog/posts/soccer-analytics-platform/). Here is what we actually found.
+The problem is that "the data exists" is not the same as "the data is usable," and that gap is exactly where we spent most of our time. We cover the engineering side in our [technical companion post](https://rabin0208.github.io/soccer_capstone_technical_blog/posts/soccer-analytics-platform/). Here is what we actually found.
 
 ## What We Found
 
@@ -52,23 +48,17 @@ We ran **5,469 outfield player-seasons** through a clustering model built on 13 
 
 : Player archetype distribution across all player-seasons. {#tbl-cluster-dist}
 
-What is striking is how well these map onto roles any football fan would recognise. And where they surprise you is even more interesting.
+What is striking is how well these map onto roles any football fan would recognise, and where they surprise you is even more interesting.
 
 ### Messi the Pressing Forward (No, Really)
 
-Lionel Messi during the 2015/2016 La Liga season: **Creative Winger**. Dribbling, carrying, cutting inside, operating in the half-spaces. The profile most people associate with him.
-
-Messi at Copa América 2024: **Pressing Forward**.
-
-Argentina's tournament setup asked something completely different from him. He pressed higher, contributed more defensively, and carried less. The event data picks it up automatically. This is not a decline story or an injury story. It is a tactical adaptation story, and it shows up clearly in the numbers:
+During the 2015/2016 La Liga season, Lionel Messi profiled as a **Creative Winger**, dribbling, carrying, cutting inside, and operating in the half-spaces, the profile most people associate with him. At Copa América 2024, the data classified him as a **Pressing Forward**. Argentina's tournament setup asked something completely different from him: he pressed higher, contributed more defensively, and carried less. The event data picks it up automatically. This is not a decline story or an injury story, but a tactical adaptation story that shows up clearly in the numbers:
 
 ![Looker cluster explorer filtered to Lionel Messi. Most seasons are Creative Winger, with Pressing Forward appearing in Copa América 2024.](assets/looker-cluster-page2.png)
 
 ### Position Shapes Your Role More Than League Does
 
-The bigger pattern across all 5,469 player-seasons: **where you play on the pitch predicts your archetype more than which league you play in**.
-
-Center backs overwhelmingly land in Defensive Anchor or Low Activity. Forwards and attacking midfielders cluster into Pressing Forward and Creative Winger. That much is expected. The more interesting finding is how central midfielders spread across three archetypes: Creative Playmaker, Pressing Forward, and Low Activity. This reflects the genuine tactical range of box-to-box roles. A Bundesliga box-to-box midfielder and a Serie A deep-lying playmaker look completely different in the data, even though both appear as "central midfield" on a lineup sheet.
+The bigger pattern across all 5,469 player-seasons is that **where you play on the pitch predicts your archetype more than which league you play in**. Center backs overwhelmingly land in Defensive Anchor or Low Activity, while forwards and attacking midfielders cluster into Pressing Forward and Creative Winger, which is largely what we would expect. The more interesting finding is how central midfielders spread across three archetypes (Creative Playmaker, Pressing Forward, and Low Activity), reflecting the genuine tactical range of box-to-box roles. A Bundesliga box-to-box midfielder and a Serie A deep-lying playmaker look completely different in the data, even though both appear as "central midfield" on a lineup sheet.
 
 League effects are real but secondary:
 
@@ -82,7 +72,7 @@ League effects are real but secondary:
 
 : Outfield cluster counts by competition. Goalkeepers excluded. {#tbl-rq1-competition}
 
-Bundesliga clubs press harder on average. Serie A squads sit deeper on average. If you are scouting across leagues, an archetype comparison only makes sense once you control for position first.
+Bundesliga clubs press harder on average and Serie A squads sit deeper on average, so if you are scouting across leagues, an archetype comparison only makes sense once you control for position first.
 
 ### The Club-vs-Country Gap Is Tactical, Not About Quality
 
@@ -95,49 +85,39 @@ Of **489 players with meaningful minutes in both club and national football**, a
 | Club Specialist | 88 | 18.0% |
 | International Specialist | 88 | 18.0% |
 
-: Observed quadrant counts for dual-context players. {#tbl-quadrant-dist}
+: How 489 players with meaningful club and national team minutes split across four club vs country groups. Elite players rank above average in both settings. Club Specialists are strong for their club but weaker for their country. International Specialists are the opposite. Underperformers rank below average in both. {#tbl-quadrant-dist}
 
-Elite players beat the peer median in both club and national settings. Club Specialists are strong against league peers but dip below their national-team cohort. International Specialists are the reverse: players who elevate at tournament level. Underperformers are below median in both.
-
-The biggest difference between Club Specialists and International Specialists was not in goals or xG. It was in **progressive passing into the attacking third** and **carries into the final third per 90**. The club-vs-country gap is mostly a system and role story. Not a talent story.
+Elite players beat the peer median in both club and national settings. Club Specialists are strong against league peers but dip below their national-team cohort, while International Specialists are the reverse: players who elevate at tournament level. Underperformers sit below median in both contexts. The biggest difference between Club Specialists and International Specialists was not in goals or xG, but in **progressive passing into the attacking third** and **carries into the final third per 90**. The club-vs-country gap is mostly a system and role story, not a talent story.
 
 ### Gnabry's Hidden International Pedigree
 
-**Serge Gnabry** is the clearest example from our cohort. When we filter the Consistency Explorer to Germany, his position on the scatter plot tells the story immediately. Looking only at his Bundesliga club-season data, he looks solid but unremarkable relative to peers. Filter to Germany's national-team context and he stands out as a textbook **International Specialist**, elevating well above his national-team cohort.
-
-If you were selecting a Germany squad based purely on club form, you might undervalue him. If you knew he was an International Specialist, that changes the conversation.
+**Serge Gnabry** is the clearest example from our cohort. When we filter the Consistency Explorer to Germany, his position on the scatter plot tells the story immediately: looking only at his Bundesliga club-season data, he looks solid but unremarkable relative to peers, but in Germany's national-team context he stands out as a textbook **International Specialist**, elevating well above his national-team cohort. If you were selecting a Germany squad based purely on club form, you might undervalue him, but knowing he is an International Specialist changes the conversation entirely.
 
 ![Looker Consistency Explorer filtered to Germany. Serge Gnabry appears as an International Specialist, performing stronger relative to national-team peers than to club peers.](assets/looker-quadrant-scatter.png)
 
 ### Ask It in Plain English
 
-The dashboard handles regular reporting and sharing. But scouts and analysts always have one-off questions that fixed charts cannot cover, like "Who are the pressing forwards in Ligue 1 with above-average xG?" or "Which Spanish players are Elite in both contexts?"
+The dashboard handles regular reporting and sharing, but scouts and analysts always have one-off questions that fixed charts cannot cover, like "Who are the pressing forwards in Ligue 1 with above-average xG?" or "Which Spanish players are Elite in both contexts?" For those, we built a plain-English chatbot that queries the warehouse directly. You type your question, BigQuery SQL is generated and executed in the background, and you receive a formatted answer in under ten seconds. Advanced Mode shows the SQL for anyone who wants to verify or extend the query, and a read-only guard blocks anything destructive.
 
-For those, we built a plain-English chatbot that queries the warehouse directly. Type your question, get BigQuery SQL generated and executed in the background, and receive a formatted answer in under ten seconds. Advanced Mode shows the SQL for anyone who wants to verify or extend the query. A read-only guard blocks anything destructive.
-
-![Django chatbot with Advanced Mode enabled, showing a natural language query, generated BigQuery SQL, and formatted results.](assets/chatbot_screenshot.png)
+![Plain-English chatbot interface with Advanced Mode enabled. A user asks a natural language question about pressing forwards in Ligue 1, the system generates and executes BigQuery SQL against the warehouse, and returns a formatted table of results alongside the underlying query for verification.](assets/chatbot_screenshot.png)
 
 You can try everything yourself at [http://34.11.235.252/](http://34.11.235.252/). The full product walkthrough is in our [demo video](https://canva.link/l2x76q5tw2rriwz).
 
 ## Why This Matters
 
-None of these outputs answer whether a player is worth signing or whether a squad will win a tournament. Archetypes describe *how* a player is deployed, not their value. Consistency scores measure *how similar* a profile is across contexts. A stable Underperformer is still an underperformer.
+None of these outputs answer whether a player is worth signing or whether a squad will win a tournament. Archetypes describe *how* a player is deployed, not their value, and consistency scores measure *how similar* a profile is across contexts. A stable Underperformer is still an underperformer. But in the right hands, these outputs change the conversation.
 
-But in the right hands, these outputs change the conversation.
+**For national team staff**, consistency scores show which players from your league-season shortlist are likely to translate to a tournament system, and which are club specialists who may struggle with the tactical shift. Gnabry's International Specialist label is a conversation starter rather than a verdict, but it is a data-grounded one.
 
-**For national team staff:** consistency scores show which players from your league-season shortlist are likely to translate to a tournament system, and which are club specialists who may struggle with the tactical shift. Gnabry's International Specialist label is a conversation starter, not a verdict. But it is a data-grounded one.
+**For scouts**, archetype filters let you find pressing forwards in Ligue 1 with above-average xG without writing SQL for every search. The chatbot handles the querying, and you handle the judgment.
 
-**For scouts:** archetype filters let you find pressing forwards in Ligue 1 with above-average xG without writing SQL for every search. The chatbot handles the querying. You handle the judgment.
-
-**For fans:** the next time a player looks completely different at a World Cup, there is a real chance the data backs you up. Systems shape profiles. Messi pressing hard at Copa América 2024 is not a decline. It is Argentina's tournament setup asking something specific from him, and him delivering it.
+**For fans**, the next time a player looks completely different at a World Cup, there is a real chance the data backs you up. Systems shape profiles, and Messi pressing hard at Copa América 2024 is not a decline but Argentina's tournament setup asking something specific from him, and him delivering it.
 
 ## Conclusion
 
-We started with a question any football fan asks: does this player actually play the same way for club and country? Four months later, we have a working platform that can answer it, player by player, feature by feature, without writing SQL.
+We started with a question any football fan asks: does this player actually play the same way for club and country? After 2 months, we have a working platform that can answer it, player by player, feature by feature, without writing SQL. Five tactical archetypes emerge naturally from 5,759 player-seasons across 16 competitions, position predicts archetype more than league does, and about one in three dual-context players shows a genuinely different profile between club and national football, with the gap driven by system and role rather than talent. A plain-English chatbot makes all of it queryable without a line of code.
 
-Five tactical archetypes emerge naturally from 5,759 player-seasons across 16 competitions. Position predicts archetype more than league does. About one in three dual-context players shows a genuinely different profile between club and national football, and the gap is driven by system and role, not talent. A plain-English chatbot makes all of it queryable without a line of code.
-
-The platform refreshes weekly. The full product deploys with a single `docker compose up`. And yes, Copa América 2024 Messi is a Pressing Forward. The data confirmed what many of us suspected.
+The platform refreshes weekly, the full product deploys with a single `docker compose up`, and yes, Copa América 2024 Messi is a Pressing Forward. The data confirmed what many of us suspected.
 
 ### Key Takeaways
 
@@ -149,7 +129,7 @@ The platform refreshes weekly. The full product deploys with a single `docker co
 
 ## Further Reading
 
-- **Technical companion post:** [Same Player, Different Game: Technical Overview](https://rabin0208.github.io/soccer_capstone_technical_blog/posts/soccer-analytics-platform/) — pipeline architecture, clustering methodology, consistency scoring, and key terms
+- **Technical companion post:** [Same Player, Different Game: Technical Overview](https://rabin0208.github.io/soccer_capstone_technical_blog/posts/soccer-analytics-platform/) (pipeline architecture, clustering methodology, consistency scoring, and key terms)
 - **Live app:** [Football Analytics Platform](http://34.11.235.252/)
 - **Demo video:** [Product walkthrough](https://canva.link/l2x76q5tw2rriwz)
 - **Project repository:** [UBC-MDS-Soccer-Capstone-2026](https://github.com/TrilemmaFoundation/UBC-MDS-Soccer-Capstone-2026)
