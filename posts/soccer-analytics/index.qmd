@@ -17,6 +17,8 @@ format:
     toc-depth: 3
 ---
 
+This post focuses on what we found. For the full pipeline, data warehouse design, clustering methodology, and consistency scoring, see our [technical companion post](https://rabin0208.github.io/soccer_capstone_technical_blog/posts/soccer-analytics-platform/).
+
 Every football fan has felt it: a player who looks unstoppable every weekend for their club, clinical and dominant, always exactly where they need to be. Then the international break arrives, they pull on the national shirt, and something just feels off, not because of injury or bad luck, but because they seem like a different player altogether. Is it the system, the teammates, or are some players genuinely built for one context more than the other?
 
 We spent 2 months trying to answer that question with data. We are four UBC Master of Data Science students who happen to be football fans with strong opinions about pressing systems, squad balance, and why your favourite striker goes quiet at tournaments. For our capstone project with the **Trilemma Foundation**, we turned 12 million raw football events into a platform that can actually measure the club-vs-country gap, player by player, feature by feature.
