@@ -97,7 +97,7 @@ div.csl-indent {
 <link rel="stylesheet" href="../../styles.css">
 </head>
 
-<body class="nav-fixed fullcontent quarto-light">
+<body class="nav-fixed quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top quarto-banner">
@@ -177,7 +177,33 @@ div.csl-indent {
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#the-questions-every-fan-and-scout-is-already-asking" id="toc-the-questions-every-fan-and-scout-is-already-asking" class="nav-link active" data-scroll-target="#the-questions-every-fan-and-scout-is-already-asking">The Questions Every Fan and Scout Is Already Asking</a></li>
+  <li><a href="#what-we-found" id="toc-what-we-found" class="nav-link" data-scroll-target="#what-we-found">What We Found</a>
+  <ul class="collapse">
+  <li><a href="#five-roles-that-cover-almost-every-outfield-player" id="toc-five-roles-that-cover-almost-every-outfield-player" class="nav-link" data-scroll-target="#five-roles-that-cover-almost-every-outfield-player">Five Roles That Cover Almost Every Outfield Player</a></li>
+  <li><a href="#messi-the-pressing-forward-no-really" id="toc-messi-the-pressing-forward-no-really" class="nav-link" data-scroll-target="#messi-the-pressing-forward-no-really">Messi the Pressing Forward (No, Really)</a></li>
+  <li><a href="#position-shapes-your-role-more-than-league-does" id="toc-position-shapes-your-role-more-than-league-does" class="nav-link" data-scroll-target="#position-shapes-your-role-more-than-league-does">Position Shapes Your Role More Than League Does</a></li>
+  <li><a href="#the-club-vs-country-gap-is-tactical-not-about-quality" id="toc-the-club-vs-country-gap-is-tactical-not-about-quality" class="nav-link" data-scroll-target="#the-club-vs-country-gap-is-tactical-not-about-quality">The Club-vs-Country Gap Is Tactical, Not About Quality</a></li>
+  <li><a href="#gnabrys-hidden-international-pedigree" id="toc-gnabrys-hidden-international-pedigree" class="nav-link" data-scroll-target="#gnabrys-hidden-international-pedigree">Gnabry’s Hidden International Pedigree</a></li>
+  <li><a href="#ask-it-in-plain-english" id="toc-ask-it-in-plain-english" class="nav-link" data-scroll-target="#ask-it-in-plain-english">Ask It in Plain English</a></li>
+  </ul></li>
+  <li><a href="#why-this-matters" id="toc-why-this-matters" class="nav-link" data-scroll-target="#why-this-matters">Why This Matters</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a>
+  <ul class="collapse">
+  <li><a href="#the-questions-answered" id="toc-the-questions-answered" class="nav-link" data-scroll-target="#the-questions-answered">The Questions, Answered</a></li>
+  <li><a href="#a-note-on-what-we-cannot-claim" id="toc-a-note-on-what-we-cannot-claim" class="nav-link" data-scroll-target="#a-note-on-what-we-cannot-claim">A Note on What We Cannot Claim</a></li>
+  <li><a href="#key-takeaways" id="toc-key-takeaways" class="nav-link" data-scroll-target="#key-takeaways">Key Takeaways</a></li>
+  </ul></li>
+  <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading">Further Reading</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
 
@@ -197,8 +223,14 @@ div.csl-indent {
 <section id="the-questions-every-fan-and-scout-is-already-asking" class="level2">
 <h2 class="anchored" data-anchor-id="the-questions-every-fan-and-scout-is-already-asking">The Questions Every Fan and Scout Is Already Asking</h2>
 <p>Every summer transfer window and every World Cup squad announcement brings the same arguments: is this player good enough for the national team, why does a striker who scores every weekend go quiet at tournaments, and why does a winger who looks ordinary at club level suddenly become unplayable internationally?</p>
-<p>These are not just pub arguments. Scouts ask how to find players who fit a specific tactical role without watching every match in La Liga, national team coaches ask which of their in-form players will actually translate to a tournament system, and analysts ask whether a player is genuinely consistent across contexts or whether we assume so simply because they are a big name. The data exists to answer all of these. <strong>StatsBomb open data</strong> <span class="citation" data-cites="statsbomb2024">(<a href="#ref-statsbomb2024" role="doc-biblioref">StatsBomb 2024</a>)</span> tracks every on-ball action including passes, carries, pressures, shots, and dribbles at sub-second resolution across 16 competitions: the top five European leagues, the FIFA World Cup, UEFA Euro, Copa América, and AFCON. That is 3,464 matches, 12.2 million events, and 10,808 players.</p>
-<p>One important detail about scope: our <strong>club-level archetypes are built on the 2015/2016 season</strong>, which is the only season where StatsBomb open data provides complete match coverage across all five top European leagues (La Liga, Premier League, Bundesliga, Serie A, and Ligue 1). La Liga alone accounts for over 800 matches from that season, which is why it dominates the coverage chart below. The club-vs-country consistency analysis draws on a wider window, pairing each player’s 2015/2016 club profile against their international appearances across all tournaments in the dataset.</p>
+<p>These are not just pub arguments:</p>
+<ul>
+<li><strong>Scouts ask:</strong> how do I find players who fit a specific tactical role without watching every match in La Liga?</li>
+<li><strong>National team coaches ask:</strong> which of my in-form players will actually translate to a tournament system?</li>
+<li><strong>Analysts ask:</strong> is this player genuinely consistent across contexts, or are we assuming so because they are a big name?</li>
+</ul>
+<p>The data exists to answer all of these, but our results come with an important caveat. <strong>StatsBomb open data</strong> <span class="citation" data-cites="statsbomb2024">(<a href="#ref-statsbomb2024" role="doc-biblioref">StatsBomb 2024</a>)</span> tracks every on-ball action including passes, carries, pressures, shots, and dribbles at sub-second resolution across 16 competitions: the top five European leagues, the FIFA World Cup, UEFA Euro, Copa América, and AFCON. That is 3,464 matches, 12.2 million events, and 10,808 players. Coverage is heavily skewed: the 2015/2016 La Liga season alone accounts for over 800 matches and dominates the dataset, so any finding from this analysis may not generalise to other leagues, seasons, or competitions.</p>
+<p>One important detail about scope: our <strong>club-level archetypes are built on the 2015/2016 season</strong>, which is the only season where StatsBomb open data provides complete match coverage across all five top European leagues (La Liga, Premier League, Bundesliga, Serie A, and Ligue 1). La Liga alone accounts for over 800 matches from that season, which is why it dominates the coverage chart below. The club-vs-country consistency analysis draws on a wider window, pairing each player’s 2015/2016 club profile against their international appearances across all tournaments in the dataset. Treat every number in this post as provisional. The skew toward La Liga and a single club season means our archetype labels and consistency scores could be wrong for players or leagues with thinner coverage.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="assets/data-coverage.png" class="img-fluid figure-img"></p>
@@ -413,16 +445,29 @@ Table&nbsp;3: How 489 players with meaningful club and national team minutes spl
 </section>
 <section id="conclusion" class="level2">
 <h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
-<p>We started with a question any football fan asks: does this player actually play the same way for club and country? After 2 months, we have a working platform that can answer it, player by player, feature by feature, without writing SQL. Five tactical archetypes emerge naturally from 5,759 player-seasons across 16 competitions, position predicts archetype more than league does, and about one in three dual-context players shows a genuinely different profile between club and national football, with the gap driven by system and role rather than talent. A plain-English chatbot makes all of it queryable without a line of code.</p>
-<p>The platform refreshes weekly, the full product deploys with a single <code>docker compose up</code>, and yes, Copa América 2024 Messi is a Pressing Forward. The data confirmed what many of us suspected.</p>
+<p>After 2 months, we built a working platform that can measure the club vs country gap player by player, without writing SQL. But the honest read is that our answers are only as good as the data behind them, and that data is skewed.</p>
+<section id="the-questions-answered" class="level3">
+<h3 class="anchored" data-anchor-id="the-questions-answered">The Questions, Answered</h3>
+<ul>
+<li><strong>Scouts ask:</strong> how do I find players who fit a specific tactical role without watching every match in La Liga? <strong>Our answer:</strong> five tactical archetypes emerge from per-90 event data, and the dashboard plus plain-English chatbot let you filter by role, league, and position. You can search for pressing forwards in Ligue 1 with above-average xG without watching every match. Position predicts role more than league does, so always filter by position before comparing across competitions.</li>
+<li><strong>National team coaches ask:</strong> which of my in-form players will actually translate to a tournament system? <strong>Our answer:</strong> consistency scores and club vs country groups flag who is likely to carry club form into a national setup. About one in three players with meaningful club and national team minutes play a genuinely different role in each setting. Gnabry is a clear example: solid at club level, but an International Specialist for Germany. Club Specialists in our data may struggle when the tactical system changes.</li>
+<li><strong>Analysts ask:</strong> is this player genuinely consistent across contexts, or are we assuming so because they are a big name? <strong>Our answer:</strong> the data says reputation is not enough. About one in three players with club and national team minutes show a different profile in each setting, and the biggest gaps are in progressive passing and carries, not goals or xG. Messi at Copa América 2024 is the headline example: Creative Winger for most club seasons, Pressing Forward for Argentina.</li>
+</ul>
+</section>
+<section id="a-note-on-what-we-cannot-claim" class="level3">
+<h3 class="anchored" data-anchor-id="a-note-on-what-we-cannot-claim">A Note on What We Cannot Claim</h3>
+<p>None of this is definitive. StatsBomb open data over-represents the 2015/2016 La Liga season, club archetypes are anchored to that single season, and international tournament minutes are uneven across players and competitions. A player labelled Club Specialist or Pressing Forward in our platform might look different with fuller coverage of the Premier League, Bundesliga, or more recent seasons. Use these outputs to start a conversation, not to close one.</p>
+<p>The platform refreshes weekly, the full product deploys with a single <code>docker compose up</code>, and yes, Copa América 2024 Messi is a Pressing Forward in our data. Whether that holds with better-balanced data is a question for the next version of the pipeline.</p>
+</section>
 <section id="key-takeaways" class="level3">
 <h3 class="anchored" data-anchor-id="key-takeaways">Key Takeaways</h3>
 <ul>
-<li><strong>One in three dual-context players</strong> specialises in one context. The biggest gaps are in progressive passing and carries, not goals or xG.</li>
+<li><strong>One in three players</strong> with club and national team minutes specialises in one setting. The biggest gaps are in progressive passing and carries, not goals or xG.</li>
 <li><strong>Gnabry</strong> is a textbook International Specialist. Undervalued if you only watch his club seasons.</li>
 <li><strong>Messi</strong> is classified as Creative Winger for most club seasons but Pressing Forward at Copa América 2024. Argentina’s compact system asked something different from him.</li>
 <li><strong>Position</strong> drives role assignment more than <strong>league</strong>. Context matters before you compare leagues.</li>
 <li>A <strong>plain-English chatbot</strong> lets any analyst query 12 million events without SQL.</li>
+<li><strong>Data is skewed</strong> toward the 2015/2016 La Liga season. Treat archetype labels and consistency scores as provisional, not ground truth.</li>
 </ul>
 </section>
 </section>
