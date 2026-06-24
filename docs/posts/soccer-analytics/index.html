@@ -93,35 +93,6 @@ div.csl-indent {
   }
 }</script>
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 <link rel="stylesheet" href="../../styles.css">
 </head>
@@ -236,7 +207,7 @@ window.Quarto = {
 <figcaption>StatsBomb open data coverage overview: 3,429 matches across 16 competitions from 2003 to 2025. The 2015/2016 La Liga season is by far the largest single-season contribution, which is why it anchors the club archetype analysis.</figcaption>
 </figure>
 </div>
-<p>The problem is that “the data exists” is not the same as “the data is usable.” And that gap is exactly where we spent most of our time. But before we get into how we solved it, here is what we actually found.</p>
+<p>The problem is that “the data exists” is not the same as “the data is usable.” And that gap is exactly where we spent most of our time. We cover the engineering side in our <a href="https://rabin0208.github.io/soccer_capstone_technical_blog/posts/soccer-analytics-platform/">technical companion post</a>. Here is what we actually found.</p>
 </section>
 <section id="what-we-found" class="level2">
 <h2 class="anchored" data-anchor-id="what-we-found">What We Found</h2>
@@ -441,20 +412,6 @@ Table&nbsp;3: Observed quadrant counts for dual-context players.
 <p>You can try everything yourself at <a href="http://34.11.235.252/">http://34.11.235.252/</a>. The full product walkthrough is in our <a href="https://canva.link/l2x76q5tw2rriwz">demo video</a>.</p>
 </section>
 </section>
-<section id="why-you-need-more-than-a-spreadsheet" class="level2">
-<h2 class="anchored" data-anchor-id="why-you-need-more-than-a-spreadsheet">Why You Need More Than a Spreadsheet</h2>
-<p>StatsBomb data at this scale arrives as deeply nested JSON files, one per match, spread across hundreds of files and split across competitions and seasons. Just loading one season of passes for La Liga requires parsing thousands of records, restructuring arrays, and joining multiple tables. For a one-off question, that is annoying. For a scout who needs answers every week, it is a blocker.</p>
-<p>This is why we built a <strong>data warehouse</strong>. Not because it sounds impressive, but because it is the only practical way to turn 12 million raw events into answers you can get in seconds.</p>
-<p>Think of it this way. If every touch of the ball in every match is one row in a spreadsheet, you have 12 million rows. Finding the top pressing forwards across five leagues means scanning all of them, calculating rates per 90 minutes, filtering out players with too few appearances, and ranking by position. In a spreadsheet, that takes hours and breaks. In a warehouse with pre-built summaries, it takes a second.</p>
-<p>We built the full pipeline on Google Cloud. Raw data lands in Google Cloud Storage, moves into <strong>BigQuery</strong> (Google’s cloud data warehouse), and gets transformed by <strong>dbt</strong> into clean, analysis-ready tables. Those tables feed two machine learning models, a Looker Studio dashboard, and a plain-English chatbot, all refreshed weekly by <strong>Dagster</strong> with no manual steps.</p>
-<p>The warehouse is the invisible foundation. Without it, every question requires a programmer and a few hours. With it, any analyst can ask “who are the elite pressing forwards in Ligue 1?” and get an answer in under ten seconds.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="assets/architecture.png" class="img-fluid figure-img"></p>
-<figcaption>Automated ELT pipeline: StatsBomb API through BigQuery and dbt to analytics marts, ML outputs, and end-user interfaces.</figcaption>
-</figure>
-</div>
-</section>
 <section id="why-this-matters" class="level2">
 <h2 class="anchored" data-anchor-id="why-this-matters">Why This Matters</h2>
 <p>None of these outputs answer whether a player is worth signing or whether a squad will win a tournament. Archetypes describe <em>how</em> a player is deployed, not their value. Consistency scores measure <em>how similar</em> a profile is across contexts. A stable Underperformer is still an underperformer.</p>
@@ -477,65 +434,12 @@ Table&nbsp;3: Observed quadrant counts for dual-context players.
 <li><strong>Position</strong> drives role assignment more than <strong>league</strong>. Context matters before you compare leagues.</li>
 <li>A <strong>plain-English chatbot</strong> lets any analyst query 12 million events without SQL.</li>
 </ul>
-<hr>
 </section>
-</section>
-<section id="under-the-hood-how-the-models-work" class="level2">
-<h2 class="anchored" data-anchor-id="under-the-hood-how-the-models-work">Under the Hood: How the Models Work</h2>
-<p><em>The technical details for the curious. You can skip this section entirely and still get everything from the findings above.</em></p>
-<section id="the-13-features-behind-every-archetype" class="level3">
-<h3 class="anchored" data-anchor-id="the-13-features-behind-every-archetype">The 13 Features Behind Every Archetype</h3>
-<p>Both models (clustering and consistency scoring) run on the same 13 per-90 StatsBomb metrics, so archetype labels and consistency scores stay aligned across the whole product:</p>
-<ul>
-<li><strong>Attacking:</strong> xG per 90, shots per 90, xG per shot</li>
-<li><strong>Progression:</strong> passes, progressive passes, pass completion %, carries, dribbles</li>
-<li><strong>Defending:</strong> pressures, interceptions, blocks, clearances, duels</li>
-</ul>
-<p>We only score players with at least <strong>270 minutes</strong> in a season (roughly three full matches). Below that, a single exceptional game can dominate per-90 stats and produce misleading profiles.</p>
-</section>
-<section id="choosing-five-archetypes-not-two-not-eight" class="level3">
-<h3 class="anchored" data-anchor-id="choosing-five-archetypes-not-two-not-eight">Choosing Five Archetypes (Not Two, Not Eight)</h3>
-<p>We did not pick k = 5 by default. The full selection workflow is in <a href="https://github.com/TrilemmaFoundation/UBC-MDS-Soccer-Capstone-2026/blob/main/notebooks/05_player_clustering.py.ipynb">Notebook 05</a> and production code lives in <a href="https://github.com/TrilemmaFoundation/UBC-MDS-Soccer-Capstone-2026/blob/main/src/ml/cluster.py"><code>src/ml/cluster.py</code></a>.</p>
-<p><strong>PCA first.</strong> We reduce the 13 features to the smallest set of principal components explaining at least 80% of variance, which is typically six. PC1 captures overall involvement volume. PC2 contrasts defensive vs attacking output.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="assets/pca-explained-variance.png" class="img-fluid figure-img"></p>
-<figcaption>Cumulative explained variance by PCA component. The 80% threshold typically requires six components on the final feature set.</figcaption>
-</figure>
-</div>
-<p><strong>Elbow and silhouette to choose k.</strong> We tested k = 2 through 10. Inertia (within-cluster sum of squares) drops sharply through k = 4, with diminishing returns after k = 5, which is the classic elbow shape. Silhouette score peaked at k = 2 (≈ 0.34), which is typical when per-90 profiles form a continuum rather than hard natural clusters. A k = 2 solution would just separate high- and low-involvement players, which is not useful. Among k = 3 through 7, <strong>k = 5</strong> gave the best balance of cluster separation (silhouette ≈ 0.28) and tactically meaningful archetypes.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="assets/elbow-plot.png" class="img-fluid figure-img"></p>
-<figcaption>Elbow curve (inertia) and silhouette scores for k = 2–10 on PCA-reduced outfield player-seasons.</figcaption>
-</figure>
-</div>
-<p><strong>Reproducibility.</strong> Production runs fix <code>random_state = 42</code> and <code>n_init = 10</code> so assignments are deterministic. Archetype labels in <a href="https://github.com/TrilemmaFoundation/UBC-MDS-Soccer-Capstone-2026/blob/main/seeds/cluster_labels.csv"><code>seeds/cluster_labels.csv</code></a> are reviewed manually when the player pool grows. Unit tests in <a href="https://github.com/TrilemmaFoundation/UBC-MDS-Soccer-Capstone-2026/blob/main/tests/test_cluster.py"><code>tests/test_cluster.py</code></a> cover preprocessing and output shape. Chi-square tests on position × archetype cross-tabs (<a href="https://github.com/TrilemmaFoundation/UBC-MDS-Soccer-Capstone-2026/blob/main/notebooks/07_rq1_role_distribution.py.ipynb">Notebook 07</a>) confirm the clusters align with football intuition rather than arbitrary splits.</p>
-</section>
-<section id="measuring-club-vs-country-consistency" class="level3">
-<h3 class="anchored" data-anchor-id="measuring-club-vs-country-consistency">Measuring Club-vs-Country Consistency</h3>
-<p>For the 489 dual-context players, each feature is standardised <strong>within context</strong>. Club z-scores compare only to other club players. National z-scores compare only to national-team peers. That way, league-level differences in tempo or style do not inflate the gap.</p>
-<p><strong>Performance score</strong> (club and national axes):</p>
-<p><span class="math display">\[\text{performance score} = \sum_{i=1}^{13} (Z_i \times w_i)\]</span></p>
-<p>where <span class="math inline">\(w_i\)</span> are PCA-derived feature weights from the clustering pipeline.</p>
-<p><strong>Consistency score</strong> (profile similarity, not quality level):</p>
-<p><span class="math display">\[\text{consistency score} = 1 - \frac{1}{13}\sum_{i=1}^{13} \left|Z_{i,\text{club}} - Z_{i,\text{national}}\right|\]</span></p>
-<p>A score of 1 means identical profiles across contexts. A score of 0 means completely different. Quadrants split the cohort at the median of each performance axis.</p>
-<p>The weighted score and consistency formula are unit-tested in <a href="https://github.com/TrilemmaFoundation/UBC-MDS-Soccer-Capstone-2026/blob/main/tests/test_consistency.py"><code>tests/test_consistency.py</code></a> and documented in <a href="https://github.com/TrilemmaFoundation/UBC-MDS-Soccer-Capstone-2026/blob/main/notebooks/03_consistency_score.ipynb">Notebook 03</a>. End-to-end pipeline checks confirmed matching row counts across dbt marts and ML outputs (5,759 clustered player-seasons and 489 dual-context players scored). Full definitions are in the <a href="https://github.com/TrilemmaFoundation/UBC-MDS-Soccer-Capstone-2026/blob/main/docs/appendix/consistency-explorer.md">consistency methodology appendix</a> and <a href="https://github.com/TrilemmaFoundation/UBC-MDS-Soccer-Capstone-2026/blob/main/docs/consistency.md"><code>docs/consistency.md</code></a>.</p>
-</section>
-</section>
-<section id="quick-reference-key-terms" class="level2">
-<h2 class="anchored" data-anchor-id="quick-reference-key-terms">Quick Reference: Key Terms</h2>
-<p><strong>Archetype:</strong> A tactical role label (e.g., Pressing Forward, Creative Playmaker) based on a player’s per-90 event profile in a given season.</p>
-<p><strong>Per-90 metrics:</strong> Stats scaled to a full 90-minute game so players with different minutes can be compared fairly.</p>
-<p><strong>Consistency score:</strong> How similar a player’s tactical profile is for club vs country. A score of 1 means identical profiles. A score of 0 means completely different.</p>
-<p><strong>xG (Expected Goals):</strong> A shot quality estimate based on distance, angle, and defensive pressure.</p>
-<p><strong>Quadrant:</strong> One of four groups (Elite, Club Specialist, International Specialist, Underperformer) based on whether a player beats their peer median in each context.</p>
-<p><strong>Data warehouse:</strong> A database optimised for analytical queries. It is what lets you ask “who are the top pressing forwards in La Liga?” and get an answer in a second instead of an hour.</p>
 </section>
 <section id="further-reading" class="level2">
 <h2 class="anchored" data-anchor-id="further-reading">Further Reading</h2>
 <ul>
+<li><strong>Technical companion post:</strong> <a href="https://rabin0208.github.io/soccer_capstone_technical_blog/posts/soccer-analytics-platform/">Same Player, Different Game: Technical Overview</a> — pipeline architecture, clustering methodology, consistency scoring, and key terms</li>
 <li><strong>Live app:</strong> <a href="http://34.11.235.252/">Football Analytics Platform</a></li>
 <li><strong>Demo video:</strong> <a href="https://canva.link/l2x76q5tw2rriwz">Product walkthrough</a></li>
 <li><strong>Project repository:</strong> <a href="https://github.com/TrilemmaFoundation/UBC-MDS-Soccer-Capstone-2026">UBC-MDS-Soccer-Capstone-2026</a></li>
